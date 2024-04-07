@@ -10,19 +10,19 @@ import { handleServiceResponse } from '@/common/utils/httpHandlers';
 export const healthCheckRegistry = new OpenAPIRegistry();
 
 export const healthCheckRouter: Router = (() => {
-  const router = express.Router();
+	const router = express.Router();
 
-  healthCheckRegistry.registerPath({
-    method: 'get',
-    path: '/health-check',
-    tags: ['Health Check'],
-    responses: createApiResponse(z.null(), 'Success'),
-  });
+	healthCheckRegistry.registerPath({
+		method: 'get',
+		path: '/health-check',
+		tags: ['Health Check'],
+		responses: createApiResponse(z.null(), 'Success'),
+	});
 
-  router.get('/', (_req: Request, res: Response) => {
-    const serviceResponse = new ServiceResponse(ResponseStatus.Success, 'Service is healthy', null, StatusCodes.OK);
-    handleServiceResponse(serviceResponse, res);
-  });
+	router.get('/', (_req: Request, res: Response) => {
+		const serviceResponse = new ServiceResponse(ResponseStatus.Success, 'Service is healthy', null, StatusCodes.OK);
+		handleServiceResponse(serviceResponse, res);
+	});
 
-  return router;
+	return router;
 })();
