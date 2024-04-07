@@ -1,16 +1,13 @@
 import { User } from '@/api/user/userModel';
-
-export const users: User[] = [
-  { id: 1, name: 'Alice', email: 'alice@example.com', age: 42, createdAt: new Date(), updatedAt: new Date() },
-  { id: 2, name: 'Bob', email: 'bob@example.com', age: 21, createdAt: new Date(), updatedAt: new Date() },
-];
+import db from '@/db/db';
 
 export const userRepository = {
-  findAllAsync: async (): Promise<User[]> => {
-    return users;
-  },
+	findAllAsync: async (): Promise<User[]> => {
+		return await db.select('*').from('users');
+	},
 
-  findByIdAsync: async (id: number): Promise<User | null> => {
-    return users.find((user) => user.id === id) || null;
-  },
+	findByIdAsync: async (id: number): Promise<User | null> => {
+		console.log('id: ', id);
+		return await db.select('*').from('users').where('id', id).first();
+	},
 };
