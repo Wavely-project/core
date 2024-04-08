@@ -18,8 +18,6 @@ export const UserSchema = z.object({
 	updatedAt: z.string(),
 });
 
-export const y = 1;
-
 // Input Validation for 'GET users/:id' endpoint
 export const GetUserSchema = z.object({
 	params: z.object({ id: commonValidations.id }),
