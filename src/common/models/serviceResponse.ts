@@ -19,6 +19,16 @@ export class ServiceResponse<T = null> {
 	}
 }
 
+export class InternalServiceResponse<T = null> {
+	success: boolean;
+	responseObject: T;
+
+	constructor(status: ResponseStatus, responseObject: T) {
+		this.success = status === ResponseStatus.Success;
+		this.responseObject = responseObject;
+	}
+}
+
 export const ServiceResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
 	z.object({
 		success: z.boolean(),

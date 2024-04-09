@@ -3,6 +3,7 @@ import express, { Express } from 'express';
 import helmet from 'helmet';
 import { pino } from 'pino';
 
+import { authRouter } from '@/api/auth/authRouter';
 import { healthCheckRouter } from '@/api/healthCheck/healthCheckRouter';
 import { userRouter } from '@/api/user/userRouter';
 import { openAPIRouter } from '@/api-docs/openAPIRouter';
@@ -19,6 +20,7 @@ app.set('trust proxy', true);
 
 // Middlewares
 app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
+app.use(express.json());
 app.use(helmet());
 app.use(rateLimiter);
 
@@ -27,6 +29,7 @@ app.use(requestLogger());
 
 // Routes
 app.use('/health-check', healthCheckRouter);
+app.use('/auth', authRouter);
 app.use('/users', userRouter);
 
 // Swagger UI
