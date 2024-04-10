@@ -7,6 +7,18 @@
 5. `npm run dev`
 6. enjoy!
 
+---
+
+## Migrations and seeding
+
+Checkout [this](https://gist.github.com/NigelEarle/70db130cc040cc2868555b29a0278261) guide.
+
+-   to create a migration file: `knex migrate:make create_users_table`
+-   to run migrations: `knex migrate:latest`
+
+-   to create a seeder file: `knex seed:make 01_users`
+-   to run the seeders: `knex seed:run`.
+
 ## 📁 Project Structure
 
 ```

@@ -1,5 +1,6 @@
 import { User } from '@/api/user/userModel';
-import db from '@/db/db';
+
+import db from '../../../db/db';
 
 export const userRepository = {
 	findAllAsync: async (): Promise<User[]> => {
