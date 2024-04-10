@@ -1,5 +1,6 @@
 import { CreateUserDto, User } from '@/api/user/userModel';
-import db from '@/db/db';
+
+import db from '../../../db/db';
 
 export const userRepository = {
 	createUser: async (user: CreateUserDto): Promise<User> => {
