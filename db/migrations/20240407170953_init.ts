@@ -1,5 +1,21 @@
 import type { Knex } from 'knex';
 
+/*
+users {
+  id uuid pk
+  username string unique
+  email string
+  password string
+  role_id uuid fk
+  bio string
+  avatar_url string
+  status_message string
+  online_status enum online | away | offline
+  created_at date
+  updated_at date
+}
+*/
+
 export async function up(knex: Knex): Promise<void> {
 	return knex.schema.createTable('users', (table) => {
 		table.increments('id').primary();
