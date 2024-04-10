@@ -1,7 +1,7 @@
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { Router } from 'express';
 
-import { CreateUserSchema, UserSchema } from '@/api/user/userModel';
+import { UserSchema } from '@/api/user/userModel';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 
 import { validateRequest } from '../../common/utils/httpHandlers';
@@ -21,7 +21,7 @@ export const authRouter: Router = (() => {
 			body: {
 				content: {
 					'application/json': {
-						schema: CreateUserSchema,
+						schema: signupSchema.shape.body,
 					},
 				},
 			},
@@ -39,7 +39,7 @@ export const authRouter: Router = (() => {
 			body: {
 				content: {
 					'application/json': {
-						schema: loginSchema,
+						schema: loginSchema.shape.body,
 					},
 				},
 			},
