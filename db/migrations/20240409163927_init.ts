@@ -21,6 +21,7 @@ export async function up(knex: Knex): Promise<void> {
 		table.increments('id').primary();
 		table.string('username').notNullable().unique();
 		table.string('email').notNullable().unique();
+		table.string('name').notNullable();
 		table.string('password').notNullable();
 		table.string('bio');
 		table.string('avatarUrl');

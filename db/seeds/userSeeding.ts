@@ -6,6 +6,7 @@ function createRandomUser() {
 		id: faker.number.int({ min: 1, max: 100000 }),
 		username: faker.internet.userName(),
 		email: faker.internet.email(),
+		name: faker.person.fullName(),
 		password: faker.internet.password(),
 		bio: faker.lorem.sentence(),
 		avatarUrl: faker.image.avatar(),
