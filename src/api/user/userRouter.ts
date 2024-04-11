@@ -1,13 +1,20 @@
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
-import express, { Request, Response, Router } from 'express';
-import { z } from 'zod';
+import express, { Router } from 'express';
 
 import { GetUserSchema, UserSchema } from '@/api/user/userModel';
-import { userService } from '@/api/user/userService';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
-import { handleServiceResponse, validateRequest } from '@/common/utils/httpHandlers';
+import { validateRequest } from '@/common/utils/httpHandlers';
+
+import AuthController from '../auth/authController';
+import UserController from './userController';
 
 export const userRegistry = new OpenAPIRegistry();
+
+const bearerAuth = userRegistry.registerComponent('securitySchemes', 'bearerAuth', {
+	type: 'http',
+	scheme: 'bearer',
+	bearerFormat: 'JWT',
+});
 
 userRegistry.register('User', UserSchema);
 
@@ -16,29 +23,14 @@ export const userRouter: Router = (() => {
 
 	userRegistry.registerPath({
 		method: 'get',
-		path: '/users',
-		tags: ['User'],
-		responses: createApiResponse(z.array(UserSchema), 'Success'),
-	});
-
-	router.get('/', async (_req: Request, res: Response) => {
-		const serviceResponse = await userService.findAll();
-		handleServiceResponse(serviceResponse, res);
-	});
-
-	userRegistry.registerPath({
-		method: 'get',
 		path: '/users/{id}',
 		tags: ['User'],
+		security: [{ [bearerAuth.name]: [] }],
 		request: { params: GetUserSchema.shape.params },
 		responses: createApiResponse(UserSchema, 'Success'),
 	});
 
-	router.get('/:id', validateRequest(GetUserSchema), async (req: Request, res: Response) => {
-		const id = parseInt(req.params.id);
-		const serviceResponse = await userService.findById(id);
-		handleServiceResponse(serviceResponse, res);
-	});
+	router.get('/:id', [AuthController.authenticate, validateRequest(GetUserSchema)], UserController.getUserById);
 
 	return router;
 })();
