@@ -12,6 +12,8 @@ import rateLimiter from '@/common/middleware/rateLimiter';
 import requestLogger from '@/common/middleware/requestLogger';
 import { env } from '@/common/utils/envConfig';
 
+import { workspaceRouter } from './api/workspace/workspaceRouter';
+
 const logger = pino({ name: 'server start' });
 const app: Express = express();
 
@@ -31,6 +33,7 @@ app.use(requestLogger());
 app.use('/health-check', healthCheckRouter);
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
+app.use('/workspaces', workspaceRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

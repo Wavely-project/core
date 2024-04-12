@@ -28,7 +28,7 @@ export async function up(knex: Knex): Promise<void> {
 		table.enum('status', ['pending', 'accepted', 'cancelled']).defaultTo('pending');
 
 		// TODO: add this to another migrationFile
-		// table.foreign('workspaceId').references('id').inTable('workspaces');
+		table.foreign('workspaceId').references('id').inTable('workspaces');
 		table.foreign('inviteeId').references('id').inTable('users');
 		table.foreign('senderId').references('id').inTable('users');
 	});

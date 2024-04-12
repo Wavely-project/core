@@ -27,9 +27,9 @@ export async function up(knex: Knex): Promise<void> {
 		table.integer('parentMessageId').unsigned();
 		table.integer('workspaceId').unsigned();
 
-		//TODO: add this to another migrationFile
+		// TODO: add this to another migrationFile
 		table.foreign('senderId').references('id').inTable('users');
-		// table.foreign('workspaceId').references('id').inTable('workspaces');
+		table.foreign('workspaceId').references('id').inTable('workspaces');
 		table.foreign('channelId').references('id').inTable('channels');
 		table.foreign('parentMessageId').references('id').inTable('messages');
 

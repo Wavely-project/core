@@ -28,7 +28,7 @@ export async function up(knex: Knex): Promise<void> {
 
 		//TODO: add this to another migrationFile
 		table.foreign('creatorId').references('id').inTable('users');
-		// table.foreign('workspaceId').references('id').inTable('workspaces');
+		table.foreign('workspaceId').references('id').inTable('workspaces');
 		table.timestamps(true, true, true);
 	});
 }
