@@ -26,7 +26,9 @@ describe('filesRepository', () => {
 			uploadedBy: 1,
 			uploadAt: new Date(),
 		});
-		expect(file.id).toBe(5);
+		const files = await db('files');
+		expect(files).toHaveLength(5);
+		await EntityFactory.deleteFiles([file.id]);
 	});
 
 	test('findByMessageId', async () => {
@@ -34,19 +36,19 @@ describe('filesRepository', () => {
 		expect(files).toHaveLength(2);
 	});
 
-	test('find Files uploaded by a user', async () => {
+	test('getUserFiles', async () => {
 		const files = await filesRepository.getUserFiles(1);
 		expect(files).toHaveLength(2);
 	});
 
-	test('delete a file', async () => {
+	test('deleteFile', async () => {
 		await filesRepository.deleteFile(1);
 		const files = await db('files').where('id', 1);
 		expect(files).toHaveLength(0);
 	});
 
 	afterAll(async () => {
-		await EntityFactory.deleteFiles([1, 2, 3, 4]);
+		await EntityFactory.deleteFiles([1, 2, 3, 4, 5]);
 		await db.schema.alterTable('files', (table) => {
 			table.foreign('messageId').references('id').inTable('messages');
 			table.foreign('uploadedBy').references('id').inTable('users');
