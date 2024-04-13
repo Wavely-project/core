@@ -8,13 +8,6 @@ export const workspaceRepository = {
 		const newWorkspace = await db('workspaces').where('id', ids[0]).first();
 		return newWorkspace;
 	},
-	// createUser: async (user: CreateUserDto): Promise<User> => {
-	// 	// const [newUser] = await db('users').insert(user).returning('*');
-	// 	const ids = await db('users').insert(user);
-	// 	const newUser = await db('users').where('id', ids[0]).first();
-	// 	return newUser;
-	// },
-
 	findAll: async (): Promise<Workspace[]> => {
 		return await db.select('*').from('workspaces');
 	},

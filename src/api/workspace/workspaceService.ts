@@ -63,7 +63,7 @@ export const workspaceService = {
 	// },
 
 	// // Retrieves all workspaces from the database
-	findAll: async (): Promise<ServiceResponse<Workspace[] | null>> => {
+	findAllWorkspaces: async (): Promise<ServiceResponse<Workspace[] | null>> => {
 		try {
 			const workspaces = await workspaceRepository.findAll();
 			if (!workspaces) {
@@ -82,18 +82,18 @@ export const workspaceService = {
 		}
 	},
 
-	// // Retrieves a single user by their ID
-	// findById: async (id: number): Promise<ServiceResponse<User | null>> => {
-	// 	try {
-	// 		const user = await userRepository.findById(id);
-	// 		if (!user) {
-	// 			return new ServiceResponse(ResponseStatus.Failed, 'User not found', null, StatusCodes.NOT_FOUND);
-	// 		}
-	// 		return new ServiceResponse<User>(ResponseStatus.Success, 'User found', user, StatusCodes.OK);
-	// 	} catch (ex) {
-	// 		const errorMessage = `Error finding user with id ${id}:, ${(ex as Error).message}`;
-	// 		logger.error(errorMessage);
-	// 		return new ServiceResponse(ResponseStatus.Failed, errorMessage, null, StatusCodes.INTERNAL_SERVER_ERROR);
-	// 	}
-	// },
+	// Retrieves a single workspace by their ID
+	findWorkspaceById: async (id: number): Promise<ServiceResponse<Workspace | null>> => {
+		try {
+			const workspace = await workspaceRepository.findById(id);
+			if (!workspace) {
+				return new ServiceResponse(ResponseStatus.Failed, 'Workspace not found', null, StatusCodes.NOT_FOUND);
+			}
+			return new ServiceResponse<Workspace>(ResponseStatus.Success, 'Workspace found', workspace, StatusCodes.OK);
+		} catch (ex) {
+			const errorMessage = `Error finding workspace with id ${id}:, ${(ex as Error).message}`;
+			logger.error(errorMessage);
+			return new ServiceResponse(ResponseStatus.Failed, errorMessage, null, StatusCodes.INTERNAL_SERVER_ERROR);
+		}
+	},
 };

@@ -6,8 +6,12 @@ import { workspaceService } from './workspaceService';
 
 const WorkspaceController = {
 	getWorkspaces: async (req: Request, res: Response) => {
-		// const id = parseInt(req.params.id);
-		const serviceResponse = await workspaceService.findAll();
+		const serviceResponse = await workspaceService.findAllWorkspaces();
+		handleServiceResponse(serviceResponse, res);
+	},
+	getWorkspaceById: async (req: Request, res: Response) => {
+		const id = parseInt(req.params.id);
+		const serviceResponse = await workspaceService.findWorkspaceById(id);
 		handleServiceResponse(serviceResponse, res);
 	},
 	createWorkspace: async (req: Request, res: Response) => {

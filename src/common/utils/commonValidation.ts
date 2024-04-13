@@ -10,5 +10,6 @@ export const commonValidations = {
 	description: z.string().min(3),
 	ownerId: z.number().positive(),
 	avatarUrl: z.string().optional(),
+	type: z.enum(['public', 'private', 'direct']),
 	// ... other common validations
 };

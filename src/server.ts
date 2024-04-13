@@ -4,15 +4,15 @@ import helmet from 'helmet';
 import { pino } from 'pino';
 
 import { authRouter } from '@/api/auth/authRouter';
+import { channelRouter } from '@/api/channels/channelRouter';
 import { healthCheckRouter } from '@/api/healthCheck/healthCheckRouter';
 import { userRouter } from '@/api/user/userRouter';
+import { workspaceRouter } from '@/api/workspace/workspaceRouter';
 import { openAPIRouter } from '@/api-docs/openAPIRouter';
 import errorHandler from '@/common/middleware/errorHandler';
 import rateLimiter from '@/common/middleware/rateLimiter';
 import requestLogger from '@/common/middleware/requestLogger';
 import { env } from '@/common/utils/envConfig';
-
-import { workspaceRouter } from './api/workspace/workspaceRouter';
 
 const logger = pino({ name: 'server start' });
 const app: Express = express();
@@ -34,6 +34,7 @@ app.use('/health-check', healthCheckRouter);
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('/workspaces', workspaceRouter);
+app.use('/channels', channelRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

@@ -22,7 +22,7 @@ export type CreateWorkspaceDto = Omit<Workspace, 'id' | 'createdAt' | 'updatedAt
 
 // Input Validation for 'GET workspaces/:id' endpoint
 export const GetWorkspaceSchema = z.object({
-	// params: z.object({ id: commonValidations.id }),
+	params: z.object({ id: commonValidations.id }),
 });
 export const CreateWorkspaceSchema = z.object({
 	body: z.object({
