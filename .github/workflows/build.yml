@@ -37,6 +37,9 @@ jobs:
             - name: run docker-compose
               run: docker compose up -d
 
+            - name: Wait for MySQL
+              run: sleep 20
+
             - name: run migrations
               run: npm run migrate
 
