@@ -13,7 +13,7 @@ export const BaseInviteSchema = z.object({
 
 export type Invite = z.infer<typeof InviteSchema>;
 export const InviteSchema = BaseInviteSchema.extend({
-	id: z.string(),
+	id: z.number(),
 	createdAt: z.date(),
 	updatedAt: z.date(),
 });

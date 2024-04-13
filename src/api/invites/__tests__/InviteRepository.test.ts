@@ -18,15 +18,19 @@ describe('inviteRepository', () => {
 	});
 
 	test('createInvite', async () => {
-		await invitesRepository.createInvite({
+		const invite = await invitesRepository.createInvite({
 			senderId: 1,
 			inviteeId: 2,
 			workspaceId: 4,
 			status: 'pending',
 			expiresAt: new Date(),
 		});
+		expect(invite.id).not.toBeNull();
+
 		const selectAll = await db.select('*').from('invites');
 		expect(selectAll).toHaveLength(5);
+
+		await EntityFactory.deleteInvites([invite.id]);
 	});
 
 	test('getInviteById', async () => {

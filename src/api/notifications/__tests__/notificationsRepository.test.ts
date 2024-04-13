@@ -23,8 +23,8 @@ describe('notificationRepository', () => {
 			type: 'mention',
 			isRead: false,
 		});
-		expect(notification.id).toBe(5);
-		await notificationsRepository.deleteNotification(5);
+		expect(notification.id).not.toBeNull();
+		await notificationsRepository.deleteNotification(notification.id);
 	});
 
 	test('getNotificationByRecipientId', async () => {
