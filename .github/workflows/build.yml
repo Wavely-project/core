@@ -34,5 +34,11 @@ jobs:
             - name: Set up .env for tests
               run: cp .env.template .env
 
+            - name: run docker-compose
+              run: docker compose up -d
+
+            - name: run migrations
+              run: npm run migrate
+
             - name: Run Test
               run: npm test
