@@ -1,17 +1,13 @@
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 
-import { logger } from './server';
-
-export function listeners(io: Server) {
-	io.on('connection', (socket) => {
-		logger.info(`Socket connected: ${socket.id}`);
+export function listeners(io: Server, socket: Socket) {
+	console.log('Socket connected:', socket.id);
+	io.use((_, next) => {
+		console.log('Socket middleware');
+		next();
 	});
 
-	io.on('connect_error', (err) => {
-		logger.error(`Socket connection error: ${err}`);
-	});
-
-	io.use((socket) => {
-		console.log(socket.handshake.auth);
+	socket.on('hi', (data: any) => {
+		console.log(`_______hi with ${data}`);
 	});
 }

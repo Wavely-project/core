@@ -21,7 +21,7 @@ const app: Express = express();
 const httpServer = createServer(app);
 
 const io = new IOServer(httpServer, { cors: { origin: '*', methods: ['GET', 'POST'] } });
-listeners(io);
+io.on('connection', (socket) => listeners(io, socket));
 
 // Set the application to trust the reverse proxy
 app.set('trust proxy', true);
