@@ -6,7 +6,9 @@ import { workspaceService } from './workspaceService';
 
 const WorkspaceController = {
 	getWorkspaces: async (req: Request, res: Response) => {
-		const serviceResponse = await workspaceService.findAllWorkspaces();
+		const ownerId = res.locals.user.id;
+		const serviceResponse = await workspaceService.findAllUserWorkspaces(ownerId);
+		//if there is no workspace found, return a 404 status code
 		handleServiceResponse(serviceResponse, res);
 	},
 	getWorkspaceById: async (req: Request, res: Response) => {
@@ -15,8 +17,8 @@ const WorkspaceController = {
 		handleServiceResponse(serviceResponse, res);
 	},
 	createWorkspace: async (req: Request, res: Response) => {
-		const { name, description, ownerId, avatarUrl } = req.body;
-
+		const { name, description, avatarUrl } = req.body;
+		const ownerId = res.locals.user.id;
 		const createUserPayload: CreateWorkspace = {
 			name,
 			description,

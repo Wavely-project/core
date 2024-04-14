@@ -6,8 +6,8 @@ import { channelService } from './channelService';
 
 const ChannelController = {
 	getChannels: async (req: Request, res: Response) => {
-		// const id = parseInt(req.params.id);
-		const serviceResponse = await channelService.findAllChannels();
+		const workspaceId = parseInt(req.params.id);
+		const serviceResponse = await channelService.findAllWorkspaceChannels(workspaceId);
 		handleServiceResponse(serviceResponse, res);
 	},
 	getChannelById: async (req: Request, res: Response) => {
@@ -16,14 +16,14 @@ const ChannelController = {
 		handleServiceResponse(serviceResponse, res);
 	},
 	createChannel: async (req: Request, res: Response) => {
-		const { name, description, creatorId, type, workspaceId } = req.body;
+		const { name, description, type, workspaceId } = req.body;
 
 		const createChannelPayload: CreateChannel = {
 			name,
 			description,
-			creatorId,
 			type,
 			workspaceId,
+			creatorId: res.locals.user.id,
 		};
 
 		const serviceResponse = await channelService.createChannel(createChannelPayload);

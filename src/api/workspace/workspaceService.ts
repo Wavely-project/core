@@ -9,9 +9,6 @@ import { logger } from '@/server';
 export const workspaceService = {
 	createWorkspace: async (workspace: CreateWorkspace): Promise<ServiceResponse<Workspace | null>> => {
 		try {
-			// const workspacePayload: CreateWorkspace = {
-			// 	...workspace,
-			// };
 			const newWorkspace = await workspaceRepository.createWorkspace(workspace);
 			if (!newWorkspace) {
 				return new ServiceResponse(
@@ -34,38 +31,10 @@ export const workspaceService = {
 		}
 	},
 
-	// checkEmailExists: async (email: string): Promise<InternalServiceResponse<boolean>> => {
-	// 	try {
-	// 		const user = await userRepository.findByEmail(email);
-	// 		if (!user) {
-	// 			return new InternalServiceResponse<boolean>(ResponseStatus.Failed, false);
-	// 		}
-	// 		return new InternalServiceResponse<boolean>(ResponseStatus.Success, true);
-	// 	} catch (ex) {
-	// 		const errorMessage = `Error checking if email exists: ${(ex as Error).message}`;
-	// 		logger.error(errorMessage);
-	// 		return new InternalServiceResponse(ResponseStatus.Failed, false);
-	// 	}
-	// },
-
-	// usernameExists: async (username: string): Promise<InternalServiceResponse<boolean>> => {
-	// 	try {
-	// 		const user = await userRepository.findByUsername(username);
-	// 		if (!user) {
-	// 			return new InternalServiceResponse<boolean>(ResponseStatus.Failed, false);
-	// 		}
-	// 		return new InternalServiceResponse<boolean>(ResponseStatus.Success, true);
-	// 	} catch (ex) {
-	// 		const errorMessage = `Error checking if username exists: ${(ex as Error).message}`;
-	// 		logger.error(errorMessage);
-	// 		return new InternalServiceResponse(ResponseStatus.Failed, false);
-	// 	}
-	// },
-
 	// // Retrieves all workspaces from the database
-	findAllWorkspaces: async (): Promise<ServiceResponse<Workspace[] | null>> => {
+	findAllUserWorkspaces: async (ownerId: number): Promise<ServiceResponse<Workspace[] | null>> => {
 		try {
-			const workspaces = await workspaceRepository.findAll();
+			const workspaces = await workspaceRepository.findAllUserWorkspaces(ownerId);
 			if (!workspaces) {
 				return new ServiceResponse(ResponseStatus.Failed, 'No workspaces found', null, StatusCodes.NOT_FOUND);
 			}

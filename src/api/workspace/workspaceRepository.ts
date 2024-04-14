@@ -11,6 +11,9 @@ export const workspaceRepository = {
 	findAll: async (): Promise<Workspace[]> => {
 		return await db.select('*').from('workspaces');
 	},
+	findAllUserWorkspaces: async (userId: number): Promise<Workspace[]> => {
+		return await db.select('*').from('workspaces').where('ownerId', userId);
+	},
 
 	findById: async (id: number): Promise<Workspace | null> => {
 		return await db.select('*').from('workspaces').where('id', id).first();

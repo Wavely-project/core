@@ -32,11 +32,17 @@ export const channelService = {
 	},
 
 	// // Retrieves all Channels from the database
-	findAllChannels: async (): Promise<ServiceResponse<Channel[] | null>> => {
+	findAllWorkspaceChannels: async (id: number): Promise<ServiceResponse<Channel[] | null>> => {
 		try {
-			const channels = await channelRepository.findAll();
+			const channels = await channelRepository.findAllWorkspaceChannels(id);
+
 			if (!channels) {
-				return new ServiceResponse(ResponseStatus.Failed, 'No channels found', null, StatusCodes.NOT_FOUND);
+				return new ServiceResponse(
+					ResponseStatus.Failed,
+					'No channels found in this workspace',
+					null,
+					StatusCodes.NOT_FOUND
+				);
 			}
 			return new ServiceResponse<Channel[]>(ResponseStatus.Success, 'channels found', channels, StatusCodes.OK);
 		} catch (ex) {
@@ -53,7 +59,7 @@ export const channelService = {
 			if (!channel) {
 				return new ServiceResponse(ResponseStatus.Failed, 'Channel not found', null, StatusCodes.NOT_FOUND);
 			}
-			return new ServiceResponse<Channel>(ResponseStatus.Success, 'User found', channel, StatusCodes.OK);
+			return new ServiceResponse<Channel>(ResponseStatus.Success, 'channel found', channel, StatusCodes.OK);
 		} catch (ex) {
 			const errorMessage = `Error finding channel with id ${id}:, ${(ex as Error).message}`;
 			logger.error(errorMessage);

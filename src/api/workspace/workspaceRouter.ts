@@ -5,6 +5,7 @@ import { CreateWorkspaceSchema, GetWorkspaceSchema, WorkspaceSchema } from '@/ap
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 import { validateRequest } from '@/common/utils/httpHandlers';
 
+import AuthController from '../auth/authController';
 import WorkspaceController from './workspaceController';
 
 export const workspaceRegistry = new OpenAPIRegistry();
@@ -22,7 +23,7 @@ export const workspaceRouter: Router = (() => {
 
 	workspaceRegistry.registerPath({
 		method: 'post',
-		path: '/workspaces/CreateWorkspace',
+		path: '/workspaces',
 		tags: ['Workspace'],
 		security: [{ [bearerAuth.name]: [] }],
 		request: {
@@ -37,18 +38,22 @@ export const workspaceRouter: Router = (() => {
 		responses: createApiResponse(WorkspaceSchema, 'Success'),
 	});
 
-	router.post('/CreateWorkspace', [validateRequest(CreateWorkspaceSchema)], WorkspaceController.createWorkspace);
+	router.post(
+		'/',
+		[AuthController.authenticate, validateRequest(CreateWorkspaceSchema)],
+		WorkspaceController.createWorkspace
+	);
 
 	workspaceRegistry.registerPath({
 		method: 'get',
-		path: '/workspaces/GetAllWorkspaces',
+		path: '/workspaces',
 		tags: ['Workspace'],
 		security: [{ [bearerAuth.name]: [] }],
 		request: {},
 		responses: createApiResponse(WorkspaceSchema, 'Success'),
 	});
 
-	router.get('/GetAllWorkspaces', WorkspaceController.getWorkspaces);
+	router.get('/', AuthController.authenticate, WorkspaceController.getWorkspaces);
 	workspaceRegistry.registerPath({
 		method: 'get',
 		path: '/workspaces/{id}',
@@ -58,7 +63,11 @@ export const workspaceRouter: Router = (() => {
 		responses: createApiResponse(WorkspaceSchema, 'Success'),
 	});
 
-	router.get('/:id', validateRequest(GetWorkspaceSchema), WorkspaceController.getWorkspaceById);
+	router.get(
+		'/:id',
+		[AuthController.authenticate, validateRequest(GetWorkspaceSchema)],
+		WorkspaceController.getWorkspaceById
+	);
 
 	return router;
 })();

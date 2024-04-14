@@ -5,6 +5,7 @@ import { ChannelSchema, CreateChannelSchema, GetChannelSchema } from '@/api/chan
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 import { validateRequest } from '@/common/utils/httpHandlers';
 
+import AuthController from '../auth/authController';
 import ChannelController from './channelController';
 
 export const channelRegistery = new OpenAPIRegistry();
@@ -22,7 +23,7 @@ export const channelRouter: Router = (() => {
 
 	channelRegistery.registerPath({
 		method: 'post',
-		path: '/channels/createChannel',
+		path: '/channels',
 		tags: ['Channel'],
 		security: [{ [bearerAuth.name]: [] }],
 		request: {
@@ -37,18 +38,23 @@ export const channelRouter: Router = (() => {
 		responses: createApiResponse(ChannelSchema, 'Success'),
 	});
 
-	router.post('/createChannel', [validateRequest(CreateChannelSchema)], ChannelController.createChannel);
-
+	router.post(
+		'/',
+		[AuthController.authenticate, validateRequest(CreateChannelSchema)],
+		ChannelController.createChannel
+	);
+	/************************************************************************** */
 	channelRegistery.registerPath({
 		method: 'get',
-		path: '/channels/getChannels',
+		path: '/channels/getWorkspaceChannel/{id}',
 		tags: ['Channel'],
 		security: [{ [bearerAuth.name]: [] }],
-		request: {},
+		request: { params: GetChannelSchema.shape.params },
 		responses: createApiResponse(ChannelSchema, 'Success'),
 	});
 
-	router.get('/getChannels', ChannelController.getChannels);
+	router.get('/getWorkspaceChannel/:id', AuthController.authenticate, ChannelController.getChannels);
+	/***************************************************************************** */
 	channelRegistery.registerPath({
 		method: 'get',
 		path: '/channels/{id}',
@@ -58,7 +64,12 @@ export const channelRouter: Router = (() => {
 		responses: createApiResponse(ChannelSchema, 'Success'),
 	});
 
-	router.get('/:id', validateRequest(GetChannelSchema), ChannelController.getChannelById);
+	router.get(
+		'/:id',
+		AuthController.authenticate,
+		validateRequest(GetChannelSchema),
+		ChannelController.getChannelById
+	);
 
 	return router;
 })();

@@ -5,9 +5,9 @@ import { commonValidations } from '@/common/utils/commonValidation';
 export const BaseChannelSchema = z.object({
 	name: z.string(),
 	description: z.string(),
-	creatorId: z.number(),
 	type: z.string(),
 	workspaceId: z.number(),
+	creatorId: z.number(),
 });
 
 export type Channel = z.infer<typeof ChannelSchema>;
@@ -27,10 +27,9 @@ export const GetChannelSchema = z.object({
 });
 export const CreateChannelSchema = z.object({
 	body: z.object({
-		name: commonValidations.name,
-		creatorId: commonValidations.id,
-		description: commonValidations.description,
-		type: commonValidations.avatarUrl,
+		name: z.string(),
+		description: z.string(),
+		type: z.enum(['public', 'private', 'direct']),
 		workspaceId: commonValidations.id,
 	}),
 });
