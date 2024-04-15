@@ -5,7 +5,7 @@ import invitesRepository from '../invitesRepository';
 describe('inviteRepository', () => {
 	beforeAll(async () => {
 		await db.schema.alterTable('invites', (table) => {
-			// table.dropForeign('workspaceId'); TODO: activate this
+			table.dropForeign('workspaceId'); //TODO: activate this
 			table.dropForeign('inviteeId');
 			table.dropForeign('senderId');
 		});
