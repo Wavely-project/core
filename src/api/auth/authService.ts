@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 
 import { ResponseStatus, ServiceResponse } from '../../common/models/serviceResponse';
+import { env } from '../../common/utils/envConfig';
 import { logger } from '../../server';
 import { CreateUser } from '../user/userModel';
 import { User } from '../user/userModel';
@@ -61,8 +62,9 @@ const authService = {
 			delete user?.avatarUrl;
 			delete user?.status;
 
-			const secret: string = 'secret';
-			const token = jwt.sign(user, secret);
+			const token = jwt.sign(user, env.JWT_SECRET, {
+				expiresIn: 99999,
+			});
 			return new ServiceResponse(ResponseStatus.Success, 'Login successful', token, StatusCodes.OK);
 		} catch (ex) {
 			const errorMessage = `Error logging in: ${(ex as Error).message}`;
