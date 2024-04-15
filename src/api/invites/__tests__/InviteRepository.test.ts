@@ -58,7 +58,7 @@ describe('inviteRepository', () => {
 	afterAll(async () => {
 		await EntityFactory.deleteInvites([1, 2, 3, 4, 5]);
 		await db.schema.alterTable('invites', (table) => {
-			// table.foreign('workspaceId').references('id').inTable('workspaces'); TODO: activate this
+			table.foreign('workspaceId').references('id').inTable('workspaces'); //TODO: activate this
 			table.foreign('inviteeId').references('id').inTable('users');
 			table.foreign('senderId').references('id').inTable('users');
 		});
