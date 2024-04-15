@@ -19,12 +19,16 @@ describe('Error Handler Middleware', () => {
 		});
 
 		app.use(errorHandler());
-		app.use('*', (req, res) => res.status(StatusCodes.NOT_FOUND).send('Not Found'));
+		app.use('*', (req, res) =>
+			res.status(StatusCodes.NOT_FOUND).send('Not Found')
+		);
 	});
 
 	describe('Handling unknown routes', () => {
 		it('returns 404 for unknown routes', async () => {
-			const response = await request(app).get('/this-route-does-not-exist');
+			const response = await request(app).get(
+				'/this-route-does-not-exist'
+			);
 			expect(response.status).toBe(StatusCodes.NOT_FOUND);
 		});
 	});

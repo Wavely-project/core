@@ -25,7 +25,9 @@ const AuthController = {
 		handleServiceResponse(serviceResponse, res);
 	},
 	authenticate: async (req: Request, res: Response, next: NextFunction) => {
-		const response = await authService.authenticate(req.headers.authorization || '');
+		const response = await authService.authenticate(
+			req.headers.authorization || ''
+		);
 		if (response.success) {
 			res.locals.user = response.responseObject;
 			return next();

@@ -21,7 +21,9 @@ const logger = pino({ name: 'server start' });
 const app: Express = express();
 const httpServer = createServer(app);
 
-const io = new IOServer<C2S, S2C, ServerEvents, data>(httpServer, { cors: { origin: '*', methods: ['GET', 'POST'] } });
+const io = new IOServer<C2S, S2C, ServerEvents, data>(httpServer, {
+	cors: { origin: '*', methods: ['GET', 'POST'] },
+});
 io.on('connection', (socket) => listeners(io, socket));
 
 // Set the application to trust the reverse proxy

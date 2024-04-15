@@ -25,7 +25,9 @@ export async function up(knex: Knex): Promise<void> {
 
 		table.timestamps(true, true, true);
 		table.timestamp('expiresAt').notNullable();
-		table.enum('status', ['pending', 'accepted', 'cancelled']).defaultTo('pending');
+		table
+			.enum('status', ['pending', 'accepted', 'cancelled'])
+			.defaultTo('pending');
 
 		// TODO: add this to another migrationFile
 		// table.foreign('workspaceId').references('id').inTable('workspaces');
