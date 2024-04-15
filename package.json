@@ -14,6 +14,8 @@
 		"test": "vitest run",
 		"test:dev": "vitest dev",
 		"test:cov": "vitest run --coverage",
+		"migrate": "knex migrate:latest",
+		"rollback": "knex migrate:rollback",
 		"prepare": "husky",
 		"release": "release-it"
 	},

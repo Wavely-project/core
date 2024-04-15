@@ -12,7 +12,7 @@ export const userService = {
 				...user,
 				bio: '',
 				avatarUrl: '',
-				status: 'online',
+				status: 'offline',
 			};
 			const newUser = await userRepository.createUser(userPayload);
 			if (!newUser) {

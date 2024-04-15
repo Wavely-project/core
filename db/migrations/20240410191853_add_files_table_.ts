@@ -23,14 +23,13 @@ export async function up(knex: Knex): Promise<void> {
 		table.integer('fileSize').notNullable();
 		table.string('fileType').notNullable();
 		table.binary('content').notNullable();
+		table.dateTime('uploadAt').defaultTo(knex.fn.now());
 
 		table.integer('messageId').unsigned();
 		table.integer('uploadedBy').unsigned();
 
 		table.foreign('messageId').references('id').inTable('messages');
 		table.foreign('uploadedBy').references('id').inTable('users');
-
-		table.timestamps(true, true, true);
 	});
 }
 
