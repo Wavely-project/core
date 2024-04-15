@@ -25,7 +25,9 @@ export async function up(knex: Knex): Promise<void> {
 		table.string('password').notNullable();
 		table.string('bio');
 		table.string('avatarUrl');
-		table.enum('status', ['online', 'offline', 'away']).defaultTo('offline');
+		table
+			.enum('status', ['online', 'offline', 'away'])
+			.defaultTo('offline');
 		table.timestamps(true, true, true);
 	});
 }

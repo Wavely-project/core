@@ -29,7 +29,11 @@ export const authRouter: Router = (() => {
 		responses: createApiResponse(UserSchema, 'Success'),
 	});
 
-	router.post('/signup', validateRequest(signupSchema), AuthController.signup);
+	router.post(
+		'/signup',
+		validateRequest(signupSchema),
+		AuthController.signup
+	);
 
 	authRegistry.registerPath({
 		method: 'post',

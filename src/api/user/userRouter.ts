@@ -10,11 +10,15 @@ import UserController from './userController';
 
 export const userRegistry = new OpenAPIRegistry();
 
-const bearerAuth = userRegistry.registerComponent('securitySchemes', 'bearerAuth', {
-	type: 'http',
-	scheme: 'bearer',
-	bearerFormat: 'JWT',
-});
+const bearerAuth = userRegistry.registerComponent(
+	'securitySchemes',
+	'bearerAuth',
+	{
+		type: 'http',
+		scheme: 'bearer',
+		bearerFormat: 'JWT',
+	}
+);
 
 userRegistry.register('User', UserSchema);
 
@@ -30,7 +34,11 @@ export const userRouter: Router = (() => {
 		responses: createApiResponse(UserSchema, 'Success'),
 	});
 
-	router.get('/:id', [AuthController.authenticate, validateRequest(GetUserSchema)], UserController.getUserById);
+	router.get(
+		'/:id',
+		[AuthController.authenticate, validateRequest(GetUserSchema)],
+		UserController.getUserById
+	);
 
 	return router;
 })();

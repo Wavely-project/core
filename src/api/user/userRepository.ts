@@ -23,6 +23,10 @@ export const userRepository = {
 	},
 
 	findByUsername: async (username: string): Promise<User | null> => {
-		return await db.select('*').from('users').where('username', username).first();
+		return await db
+			.select('*')
+			.from('users')
+			.where('username', username)
+			.first();
 	},
 };
