@@ -14,13 +14,14 @@ import rateLimiter from '@/common/middleware/rateLimiter';
 import requestLogger from '@/common/middleware/requestLogger';
 import { env } from '@/common/utils/envConfig';
 
-import { listeners } from './socket';
+import { listeners } from './sockets/socket';
+import { C2S, data, S2C, ServerEvents } from './sockets/sockets.types';
 
 const logger = pino({ name: 'server start' });
 const app: Express = express();
 const httpServer = createServer(app);
 
-const io = new IOServer(httpServer, { cors: { origin: '*', methods: ['GET', 'POST'] } });
+const io = new IOServer<C2S, S2C, ServerEvents, data>(httpServer, { cors: { origin: '*', methods: ['GET', 'POST'] } });
 io.on('connection', (socket) => listeners(io, socket));
 
 // Set the application to trust the reverse proxy
