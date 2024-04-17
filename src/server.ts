@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express, { Express } from 'express';
 import helmet from 'helmet';
+import { createServer } from 'http';
 import { pino } from 'pino';
 
 import { authRouter } from '@/api/auth/authRouter';
@@ -12,8 +13,13 @@ import rateLimiter from '@/common/middleware/rateLimiter';
 import requestLogger from '@/common/middleware/requestLogger';
 import { env } from '@/common/utils/envConfig';
 
+import { connectSocket } from './sockets/socket';
+
 const logger = pino({ name: 'server start' });
 const app: Express = express();
+const httpServer = createServer(app);
+
+connectSocket(httpServer);
 
 // Set the application to trust the reverse proxy
 app.set('trust proxy', true);
@@ -38,4 +44,4 @@ app.use(openAPIRouter);
 // Error handlers
 app.use(errorHandler());
 
-export { app, logger };
+export { httpServer as app, logger };
