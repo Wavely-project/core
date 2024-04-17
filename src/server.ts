@@ -3,7 +3,6 @@ import express, { Express } from 'express';
 import helmet from 'helmet';
 import { createServer } from 'http';
 import { pino } from 'pino';
-import { Server as IOServer } from 'socket.io';
 
 import { authRouter } from '@/api/auth/authRouter';
 import { healthCheckRouter } from '@/api/healthCheck/healthCheckRouter';
@@ -14,15 +13,13 @@ import rateLimiter from '@/common/middleware/rateLimiter';
 import requestLogger from '@/common/middleware/requestLogger';
 import { env } from '@/common/utils/envConfig';
 
-import { listeners } from './sockets/socket';
-import { C2S, data, S2C, ServerEvents } from './sockets/sockets.types';
+import { connectSocket } from './sockets/socket';
 
 const logger = pino({ name: 'server start' });
 const app: Express = express();
 const httpServer = createServer(app);
 
-const io = new IOServer<C2S, S2C, ServerEvents, data>(httpServer, { cors: { origin: '*', methods: ['GET', 'POST'] } });
-io.on('connection', (socket) => listeners(io, socket));
+connectSocket(httpServer);
 
 // Set the application to trust the reverse proxy
 app.set('trust proxy', true);
@@ -47,4 +44,4 @@ app.use(openAPIRouter);
 // Error handlers
 app.use(errorHandler());
 
-export { httpServer as app, io, logger };
+export { httpServer as app, logger };
