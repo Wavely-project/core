@@ -5,7 +5,7 @@ import db from '../../../db/db';
 export const memberRepository = {
 	createMember: async (member: CreateMemberDto): Promise<Member> => {
 		const ids = await db('members').insert(member);
-		const newMember = await db('members').where('id', ids[0]).first();
+		const newMember = await db('members').where('userId', ids[0]).first();
 		return newMember;
 	},
 	getAllUserChannels: async (userId: number): Promise<Member[]> => {

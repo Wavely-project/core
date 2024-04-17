@@ -18,4 +18,7 @@ export const workspaceRepository = {
 	findById: async (id: number): Promise<Workspace | null> => {
 		return await db.select('*').from('workspaces').where('id', id).first();
 	},
+	deleteWorkspace: async (id: number): Promise<void> => {
+		await db('workspaces').where('id', id).delete();
+	},
 };

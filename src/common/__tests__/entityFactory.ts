@@ -1,3 +1,8 @@
+import { Coworker } from '@/api/coworkers/coworkersModel';
+import { Member } from '@/api/members/memberModel';
+import { Notification } from '@/api/notifications/notificationsModel';
+import { Workspace } from '@/api/workspace/workspaceModel';
+
 import db from '../../../db/db';
 import { Invite } from '../../api/invites/invitesModel';
 import { Thread } from '../../api/threads/threadsModel';
@@ -91,6 +96,134 @@ class EntityFactory {
 
 	deleteThread(participantId: number, parentMessageId: number): Promise<void> {
 		return db('threads').where('participantId', participantId).andWhere('parentMessageId', parentMessageId).del();
+	}
+	createMember(userId: number, channelId: number): Promise<Member> {
+		const member = {
+			userId: userId,
+			channelId: channelId,
+			createdAt: new Date(),
+		};
+		return db('members')
+			.insert(member)
+			.then(() => db('members').where('userId', userId).first());
+	}
+	deleteMembers(userId: number, channelId: number): Promise<void> {
+		return db('members')
+			.where((b) => b.where('userId', userId))
+			.andWhere('channelId', channelId)
+			.del();
+	}
+	createCoworker(userId: number, workspaceId: number): Promise<Coworker> {
+		const coworker = {
+			userId: userId,
+			workspaceId: workspaceId,
+			createdAt: new Date(),
+		};
+		return db('coworkers')
+			.insert(coworker)
+			.then(() => db('coworkers').where('userId', userId).andWhere('workspaceId', workspaceId).first());
+	}
+	deleteCoworkers(userId: number, workspaceId: number): Promise<void> {
+		return db('coworkers')
+			.where((b) => b.where('userId', userId))
+			.andWhere('workspaceId', workspaceId)
+			.del();
+	}
+	createWorkspace(
+		id: number,
+		ownerId: number,
+		name: string,
+		description: string,
+
+		avatarUrl: string
+	): Promise<Workspace> {
+		const workspace = {
+			id: id,
+			name: name,
+			description: description,
+			ownerId: ownerId,
+			avatarUrl: avatarUrl,
+			createdAt: new Date(),
+			updatedAt: new Date(),
+		};
+		return db('workspaces')
+			.insert(workspace)
+			.then(() => db('workspaces').where('id', id).first());
+	}
+	deleteWorkspaces(id: number[]): Promise<void> {
+		return db('workspaces')
+			.where((b) => b.whereIn('id', id))
+			.del();
+	}
+	addReaction(id: number, userId: number, messageId: number, emoji: string): Promise<void> {
+		const reaction = {
+			id: id,
+			messageId: messageId,
+			userId: userId,
+			reaction: emoji,
+		};
+		return db('reactions')
+			.insert(reaction)
+			.then(() => db('reactions').where('id', id).first());
+	}
+	deleteReactions(id: number[]): Promise<void> {
+		return db('reactions')
+			.where((b) => b.whereIn('id', id))
+			.del();
+	}
+	createMessage(
+		id: number,
+		senderId: number,
+		channelId: number,
+		workspaceId: number,
+		parentMessageId: number,
+		content: string
+	): Promise<void> {
+		const message = {
+			id: id,
+			senderId: senderId,
+			channelId: channelId,
+			workspaceId: workspaceId,
+			parentMessageId: parentMessageId,
+			content: content,
+			createdAt: new Date(),
+			updatedAt: new Date(),
+		};
+		return db('messages')
+			.insert(message)
+			.then(() => db('messages').where('id', id).first());
+	}
+	deleteMessages(id: number[]): Promise<void> {
+		return db('messages')
+			.where((b) => b.whereIn('id', id))
+			.del();
+	}
+	createChannel(
+		id: number,
+		creatorId: number,
+		workspaceId: number,
+		name: string,
+		description: string,
+		type: string
+	): Promise<void> {
+		const channel = {
+			id: id,
+			creatorId: creatorId,
+			workspaceId: workspaceId,
+			name: name,
+			description: description,
+			type: type,
+			createdAt: new Date(),
+			updatedAt: new Date(),
+		};
+		return db('channels')
+			.insert(channel)
+			.then(() => db('channels').where('id', id).first());
+	}
+	deleteChannels(id: number[]): Promise<void> {
+		return db('channels')
+			.where((b) => b.whereIn('id', id))
+			.del();
 	}
 }
 

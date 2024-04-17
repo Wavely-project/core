@@ -19,5 +19,10 @@
 	},
 	"extends": [],
 	"exclude": ["node_modules"],
-	"include": ["src/**/*.ts"]
+	"include": [
+		"src/**/*.ts",
+		"../chennel/channelController.ts",
+		"../chennel/channelRouter.ts",
+		"../chennel/channelService.ts"
+	]
 }

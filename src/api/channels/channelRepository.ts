@@ -18,4 +18,7 @@ export const channelRepository = {
 	findById: async (id: number): Promise<Channel | null> => {
 		return await db.select('*').from('channels').where('id', id).first();
 	},
+	deleteChannel: async (id: number): Promise<void> => {
+		await db('channels').where('id', id).delete();
+	},
 };

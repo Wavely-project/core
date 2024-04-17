@@ -11,7 +11,7 @@ export const MemberSchema = BaseMemberSchema.extend({
 
 export type Member = z.infer<typeof MemberSchema>;
 export type CreateMember = z.infer<typeof BaseMemberSchema>;
-export type CreateMemberDto = Omit<Member, 'id' | 'createdAt'>;
+export type CreateMemberDto = Omit<Member, 'createdAt'>;
 
 // Input Validation for 'GET member/:id' endpoint
 export const CreateMemberSchema = z.object({

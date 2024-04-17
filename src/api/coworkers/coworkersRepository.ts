@@ -2,10 +2,10 @@ import { Coworker, CreateCoworkerDto } from '@/api/coworkers/coworkersModel';
 
 import db from '../../../db/db';
 
-export const memberRepository = {
+export const coworkerRepository = {
 	createCoworker: async (coworker: CreateCoworkerDto): Promise<Coworker> => {
 		const ids = await db('coworkers').insert(coworker);
-		const newCoworker = await db('coworkers').where('id', ids[0]).first();
+		const newCoworker = await db('coworkers').where('userId', ids[0]).first();
 		return newCoworker;
 	},
 	getAllUserWorkspaces: async (userId: number): Promise<Coworker[]> => {
@@ -15,6 +15,6 @@ export const memberRepository = {
 		return await db.select('*').from('coworkers').where('workspaceId', workspaceId);
 	},
 	removeCoworker: async (userId: number, workspaceId: number): Promise<void> => {
-		await db('coworkers').where('userId', userId).where('channelId', workspaceId).delete();
+		await db('coworkers').where('userId', userId).where('workspaceId', workspaceId).delete();
 	},
 };
