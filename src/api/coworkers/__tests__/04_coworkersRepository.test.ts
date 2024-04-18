@@ -18,8 +18,11 @@ describe('coworkerRepository', () => {
 
 	test('createCoworker', async () => {
 		await coworkerRepository.createCoworker({ userId: 3, workspaceId: 3 });
-		const coworkers = await db('coworkers').where('userId', 3).andWhere('workspaceId', 3);
-		expect(coworkers).toHaveLength(1);
+		const coworker = await db('coworkers').where('userId', 3).andWhere('workspaceId', 3);
+		expect(coworker).not.toBeNull();
+		const selectAll = await db.select('*').from('coworkers');
+		expect(selectAll).toHaveLength(5);
+		await EntityFactory.deleteCoworkers(3, 3);
 	});
 
 	test('getAllUserWorkspaces', async () => {
@@ -28,7 +31,7 @@ describe('coworkerRepository', () => {
 	});
 	test('getAllWorkspaceUsers', async () => {
 		const coworkers = await coworkerRepository.getAllWorkspaceUsers(3);
-		expect(coworkers).toHaveLength(2);
+		expect(coworkers).toHaveLength(1);
 	});
 	test('removeCoworker', async () => {
 		await coworkerRepository.removeCoworker(1, 1);
@@ -38,11 +41,9 @@ describe('coworkerRepository', () => {
 
 	afterAll(async () => {
 		await Promise.all([
-			EntityFactory.deleteCoworkers(1, 1),
 			EntityFactory.deleteCoworkers(1, 2),
 			EntityFactory.deleteCoworkers(2, 1),
 			EntityFactory.deleteCoworkers(2, 3),
-			EntityFactory.deleteCoworkers(3, 3),
 		]);
 
 		await db.schema.alterTable('coworkers', (table) => {

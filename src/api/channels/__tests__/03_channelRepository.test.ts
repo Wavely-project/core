@@ -4,8 +4,8 @@ import { channelRepository } from '../channelRepository';
 describe('channelRepository', () => {
 	beforeAll(async () => {
 		await db.schema.alterTable('channels', (table) => {
-			table.dropForeign('creatorId');
 			table.dropForeign('workspaceId');
+			table.dropForeign('creatorId');
 		});
 
 		await Promise.all([
@@ -17,29 +17,31 @@ describe('channelRepository', () => {
 	});
 
 	test('createChannel', async () => {
-		await channelRepository.createChannel({
+		const channel = await channelRepository.createChannel({
 			creatorId: 3,
 			workspaceId: 3,
 			name: 'channel5',
 			description: 'description',
 			type: 'public',
 		});
-		const channels = await db('channels').where('creatorId', 3).andWhere('workspaceId', 3);
-		expect(channels).toHaveLength(1);
+		expect(channel.id).not.toBeNull();
+		const selectAll = await db.select('*').from('channels');
+		expect(selectAll).toHaveLength(5);
+		await EntityFactory.deleteChannels([channel.id]);
 	});
 
 	test('getAllChannels', async () => {
 		const channels = await channelRepository.findAll();
-		expect(channels).toHaveLength(5);
+		expect(channels).toHaveLength(4);
 	});
 	test('getAllWorkspaceChannels', async () => {
 		const channels = await channelRepository.findAllWorkspaceChannels(3);
-		expect(channels).toHaveLength(2);
+		expect(channels).toHaveLength(1);
 	});
 	test('deleteChannel', async () => {
 		await channelRepository.deleteChannel(4);
 		const channels = await db('channels').where('workspaceId', 3);
-		expect(channels).toHaveLength(1);
+		expect(channels).toHaveLength(0);
 	});
 
 	afterAll(async () => {

@@ -123,13 +123,13 @@ class EntityFactory {
 			.insert(coworker)
 			.then(() => db('coworkers').where('userId', userId).andWhere('workspaceId', workspaceId).first());
 	}
-	deleteCoworkers(userId: number, workspaceId: number): Promise<void> {
-		return db('coworkers')
+	async deleteCoworkers(userId: number, workspaceId: number): Promise<void> {
+		return await db('coworkers')
 			.where((b) => b.where('userId', userId))
 			.andWhere('workspaceId', workspaceId)
 			.del();
 	}
-	createWorkspace(
+	async createWorkspace(
 		id: number,
 		ownerId: number,
 		name: string,
@@ -146,28 +146,28 @@ class EntityFactory {
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		};
-		return db('workspaces')
+		return await db('workspaces')
 			.insert(workspace)
 			.then(() => db('workspaces').where('id', id).first());
 	}
-	deleteWorkspaces(id: number[]): Promise<void> {
-		return db('workspaces')
+	async deleteWorkspaces(id: number[]): Promise<void> {
+		return await db('workspaces')
 			.where((b) => b.whereIn('id', id))
 			.del();
 	}
-	addReaction(id: number, userId: number, messageId: number, emoji: string): Promise<void> {
+	async addReaction(id: number, userId: number, messageId: number, emoji: string): Promise<void> {
 		const reaction = {
 			id: id,
 			messageId: messageId,
 			userId: userId,
 			reaction: emoji,
 		};
-		return db('reactions')
+		return await db('reactions')
 			.insert(reaction)
 			.then(() => db('reactions').where('id', id).first());
 	}
-	deleteReactions(id: number[]): Promise<void> {
-		return db('reactions')
+	async deleteReactions(id: number[]): Promise<void> {
+		return await db('reactions')
 			.where((b) => b.whereIn('id', id))
 			.del();
 	}
@@ -220,8 +220,8 @@ class EntityFactory {
 			.insert(channel)
 			.then(() => db('channels').where('id', id).first());
 	}
-	deleteChannels(id: number[]): Promise<void> {
-		return db('channels')
+	async deleteChannels(id: number[]): Promise<void> {
+		return await db('channels')
 			.where((b) => b.whereIn('id', id))
 			.del();
 	}
