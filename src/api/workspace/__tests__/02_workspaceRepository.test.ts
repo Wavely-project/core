@@ -37,13 +37,13 @@ describe('workspaceRepository', () => {
 		expect(workspaces).toHaveLength(2);
 	});
 	test('deleteWorkspace', async () => {
-		await workspaceRepository.deleteWorkspace(2);
-		const workspaces = await db('workspaces').where('ownerId', 1);
-		expect(workspaces).toHaveLength(1);
+		await workspaceRepository.deleteWorkspace(4);
+		const workspaces = await db.select('*').from('workspaces');
+		expect(workspaces).toHaveLength(3);
 	});
 
 	afterAll(async () => {
-		await Promise.all([EntityFactory.deleteWorkspaces([1, 3, 4])]);
+		await Promise.all([EntityFactory.deleteWorkspaces([1, 2, 3])]);
 
 		await db.schema.alterTable('workspaces', (table) => {
 			table.foreign('ownerId').references('id').inTable('users');

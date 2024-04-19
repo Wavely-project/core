@@ -21,6 +21,7 @@ describe('memberRepository', () => {
 		await memberRepository.createMember({ userId: 3, channelId: 3 });
 		const members = await db('members').where('userId', 3).andWhere('channelId', 3);
 		expect(members).toHaveLength(1);
+		await EntityFactory.deleteMembers(3, 3);
 	});
 
 	test('getAllUserChannels', async () => {
@@ -29,7 +30,7 @@ describe('memberRepository', () => {
 	});
 	test('getAllChannelUsers', async () => {
 		const members = await memberRepository.getAllChannelUsers(3);
-		expect(members).toHaveLength(2);
+		expect(members).toHaveLength(1);
 	});
 	test('removeMember', async () => {
 		await memberRepository.removeMember(1, 1);
@@ -39,11 +40,9 @@ describe('memberRepository', () => {
 
 	afterAll(async () => {
 		await Promise.all([
-			EntityFactory.deleteMembers(1, 1),
 			EntityFactory.deleteMembers(1, 2),
 			EntityFactory.deleteMembers(2, 1),
 			EntityFactory.deleteMembers(2, 3),
-			EntityFactory.deleteMembers(3, 3),
 		]);
 
 		await db.schema.alterTable('members', (table) => {
