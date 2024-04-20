@@ -2,9 +2,9 @@ import db from '../../../db/db';
 import { CreateInviteDto, Invite } from './invitesModel';
 
 const invitesRepository = {
-	createInvite: async (invite: CreateInviteDto): Promise<Invite> => {
-		const ids = await db('invites').insert(invite);
-		const newInvite = await db('invites').where('id', ids[0]).first();
+	createInvite: async (trx: any, invite: CreateInviteDto): Promise<Invite> => {
+		const ids = await trx('invites').insert(invite);
+		const newInvite = await trx('invites').where('id', ids[0]).first();
 		return newInvite;
 	},
 	getInviteById: async (id: string): Promise<Invite | null> => {

@@ -3,9 +3,9 @@ import { CreateWorkspaceDto, Workspace } from '@/api/workspace/workspaceModel';
 import db from '../../../db/db';
 
 export const workspaceRepository = {
-	createWorkspace: async (workspace: CreateWorkspaceDto): Promise<Workspace> => {
-		const ids = await db('workspaces').insert(workspace);
-		const newWorkspace = await db('workspaces').where('id', ids[0]).first();
+	createWorkspace: async (trx: any, workspace: CreateWorkspaceDto): Promise<Workspace> => {
+		const ids = await trx('workspaces').insert(workspace);
+		const newWorkspace = await trx('workspaces').where('id', ids[0]).first();
 		return newWorkspace;
 	},
 	findAll: async (): Promise<Workspace[]> => {
@@ -18,7 +18,7 @@ export const workspaceRepository = {
 	findById: async (id: number): Promise<Workspace | null> => {
 		return await db.select('*').from('workspaces').where('id', id).first();
 	},
-	deleteWorkspace: async (id: number): Promise<void> => {
-		await db('workspaces').where('id', id).delete();
+	deleteWorkspace: async (trx: any, id: number): Promise<void> => {
+		await trx('workspaces').where('id', id).delete();
 	},
 };

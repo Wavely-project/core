@@ -2,8 +2,10 @@ import db from '../../../../db/db';
 import EntityFactory from '../../../common/__tests__/entityFactory';
 import { workspaceRepository } from '../workspaceRepository';
 describe('workspaceRepository', () => {
+	let trx: any;
 	beforeAll(async () => {
-		await db.schema.alterTable('workspaces', (table) => {
+		trx = await db.transaction();
+		await trx.schema.alterTable('workspaces', (table: any) => {
 			table.dropForeign('ownerId');
 		});
 
@@ -14,18 +16,21 @@ describe('workspaceRepository', () => {
 			EntityFactory.createWorkspace(4, 3, 'workspace4', 'description', 'url'),
 		]);
 	});
-
+	afterEach(async () => {
+		await trx.rollback();
+	});
 	test('createWorkspace', async () => {
-		const workspace = await workspaceRepository.createWorkspace({
+		trx = await db.transaction();
+		const workspace = await workspaceRepository.createWorkspace(trx, {
 			ownerId: 3,
 			name: 'workspace5',
 			description: 'description',
 			avatarUrl: 'url',
 		});
 		expect(workspace.id).not.toBeNull();
-		const workspaces = await db.select('*').from('workspaces');
+		const workspaces = await trx.select('*').from('workspaces');
 		expect(workspaces).toHaveLength(5);
-		await EntityFactory.deleteWorkspaces([workspace.id]);
+		// await EntityFactory.deleteWorkspaces([workspace.id]);
 	});
 
 	test('getAllWorkspaces', async () => {
@@ -37,16 +42,17 @@ describe('workspaceRepository', () => {
 		expect(workspaces).toHaveLength(2);
 	});
 	test('deleteWorkspace', async () => {
-		await workspaceRepository.deleteWorkspace(4);
-		const workspaces = await db.select('*').from('workspaces');
+		trx = await db.transaction();
+		await workspaceRepository.deleteWorkspace(trx, 4);
+		const workspaces = await trx.select('*').from('workspaces');
 		expect(workspaces).toHaveLength(3);
 	});
 
 	afterAll(async () => {
-		await Promise.all([EntityFactory.deleteWorkspaces([1, 2, 3])]);
-
-		await db.schema.alterTable('workspaces', (table) => {
+		trx = await db.transaction();
+		await Promise.all([EntityFactory.deleteWorkspaces([1, 2, 3, 4])]);
+		await trx.schema.alterTable('workspaces', (table: any) => {
 			table.foreign('ownerId').references('id').inTable('users');
 		});
 	});
-});
+}, 15000);

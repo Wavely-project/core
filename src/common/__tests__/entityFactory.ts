@@ -6,7 +6,6 @@ import { Workspace } from '@/api/workspace/workspaceModel';
 import db from '../../../db/db';
 import { Invite } from '../../api/invites/invitesModel';
 import { Thread } from '../../api/threads/threadsModel';
-
 class EntityFactory {
 	createFile(id: number, uploadedBy: number, messageId: number): Promise<File> {
 		const file = {
@@ -199,6 +198,7 @@ class EntityFactory {
 			.del();
 	}
 	createChannel(
+		trx: any,
 		id: number,
 		creatorId: number,
 		workspaceId: number,
@@ -216,7 +216,7 @@ class EntityFactory {
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		};
-		return db('channels')
+		return trx('channels')
 			.insert(channel)
 			.then(() => db('channels').where('id', id).first());
 	}

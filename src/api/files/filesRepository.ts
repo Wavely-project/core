@@ -1,9 +1,9 @@
 import db from '../../../db/db';
 import { CreateFileDto, File } from './filesModel';
 const filesRepository = {
-	createFile: async (file: CreateFileDto): Promise<File> => {
-		const ids = await db('files').insert(file);
-		const newFile = await db('files').where('id', ids[0]).first();
+	createFile: async (trx: any, file: CreateFileDto): Promise<File> => {
+		const ids = await trx('files').insert(file);
+		const newFile = await trx('files').where('id', ids[0]).first();
 		return newFile;
 	},
 	getFileById: async (id: number): Promise<File | null> => {
@@ -15,8 +15,8 @@ const filesRepository = {
 	getUserFiles: async (userId: number): Promise<File[]> => {
 		return await db.select('*').from('files').where('uploadedBy', userId);
 	},
-	deleteFile: async (id: number): Promise<void> => {
-		await db('files').where('id', id).del();
+	deleteFile: async (trx: any, id: number): Promise<void> => {
+		await trx('files').where('id', id).del();
 	},
 };
 

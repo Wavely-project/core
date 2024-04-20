@@ -3,8 +3,10 @@ import EntityFactory from '../../../common/__tests__/entityFactory';
 import filesRepository from '../filesRepository';
 
 describe('filesRepository', () => {
+	let trx: any;
 	beforeAll(async () => {
-		await db.schema.alterTable('files', (table) => {
+		trx = await db.transaction();
+		await trx.schema.alterTable('files', (table: any) => {
 			table.dropForeign('messageId');
 			table.dropForeign('uploadedBy');
 		});
@@ -15,9 +17,13 @@ describe('filesRepository', () => {
 			EntityFactory.createFile(4, 2, 3),
 		]);
 	});
+	afterEach(async () => {
+		await trx.rollback();
+	});
 
 	test('createFile', async () => {
-		const file = await filesRepository.createFile({
+		trx = await db.transaction();
+		await filesRepository.createFile(trx, {
 			fileName: 'file1',
 			fileSize: 100,
 			fileType: 'image/png',
@@ -26,9 +32,9 @@ describe('filesRepository', () => {
 			uploadedBy: 1,
 			uploadAt: new Date(),
 		});
-		const files = await db('files');
+		const files = await trx('files');
 		expect(files).toHaveLength(5);
-		await EntityFactory.deleteFiles([file.id]);
+		// await EntityFactory.deleteFiles([file.id]);
 	});
 
 	test('findByMessageId', async () => {
@@ -42,14 +48,16 @@ describe('filesRepository', () => {
 	});
 
 	test('deleteFile', async () => {
-		await filesRepository.deleteFile(1);
-		const files = await db('files').where('id', 1);
+		trx = await db.transaction();
+		await filesRepository.deleteFile(trx, 1);
+		const files = await trx('files').where('id', 1);
 		expect(files).toHaveLength(0);
 	});
 
 	afterAll(async () => {
-		await EntityFactory.deleteFiles([1, 2, 3, 4, 5]);
-		await db.schema.alterTable('files', (table) => {
+		trx = await db.transaction();
+		await EntityFactory.deleteFiles([1, 2, 3, 4]);
+		await trx.schema.alterTable('files', (table: any) => {
 			table.foreign('messageId').references('id').inTable('messages');
 			table.foreign('uploadedBy').references('id').inTable('users');
 		});

@@ -2,9 +2,9 @@ import db from '../../../db/db';
 import { CreateNotificationDto, Notification } from './notificationsModel';
 
 const notificationsRepository = {
-	createNotification: async (notification: CreateNotificationDto): Promise<Notification> => {
-		const ids = await db('notifications').insert(notification);
-		const newNotification = await db('notifications').where('id', ids[0]).first();
+	createNotification: async (trx: any, notification: CreateNotificationDto): Promise<Notification> => {
+		const ids = await trx('notifications').insert(notification);
+		const newNotification = await trx('notifications').where('id', ids[0]).first();
 		return newNotification;
 	},
 	getNotificationById: async (id: number): Promise<Notification | null> => {
@@ -19,8 +19,8 @@ const notificationsRepository = {
 	markAsRead: async (id: number): Promise<void> => {
 		await db('notifications').where('id', id).update({ isRead: true });
 	},
-	deleteNotification: async (id: number): Promise<void> => {
-		await db('notifications').where('id', id).del();
+	deleteNotification: async (trx: any, id: number): Promise<void> => {
+		await trx('notifications').where('id', id).del();
 	},
 };
 

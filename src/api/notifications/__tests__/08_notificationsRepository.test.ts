@@ -3,8 +3,10 @@ import EntityFactory from '../../../common/__tests__/entityFactory';
 import notificationsRepository from '../notificationsRepository';
 
 describe('notificationRepository', () => {
+	let trx: any;
 	beforeAll(async () => {
-		await db.schema.alterTable('notifications', (table) => {
+		trx = await db.transaction();
+		await trx.schema.alterTable('notifications', (table: any) => {
 			table.dropForeign('recipientId');
 			table.dropForeign('messageId');
 		});
@@ -15,16 +17,19 @@ describe('notificationRepository', () => {
 			EntityFactory.createNotification(4, 2, 4, 'invite'),
 		]);
 	});
-
+	afterEach(async () => {
+		await trx.rollback();
+	});
 	test('createNotification', async () => {
-		const notification = await notificationsRepository.createNotification({
+		trx = await db.transaction();
+		const notification = await notificationsRepository.createNotification(trx, {
 			recipientId: 5,
 			messageId: 2,
 			type: 'mention',
 			isRead: false,
 		});
 		expect(notification.id).not.toBeNull();
-		await notificationsRepository.deleteNotification(notification.id);
+		// await notificationsRepository.deleteNotification(notification.id);
 	});
 
 	test('getNotificationByRecipientId', async () => {
@@ -44,14 +49,16 @@ describe('notificationRepository', () => {
 	});
 
 	test('deleteNotification', async () => {
-		await notificationsRepository.deleteNotification(1);
-		const notification = await db('notifications').where('id', 1);
+		trx = await db.transaction();
+		await notificationsRepository.deleteNotification(trx, 1);
+		const notification = await trx('notifications').where('id', 1);
 		expect(notification).toHaveLength(0);
 	});
 
 	afterAll(async () => {
-		await EntityFactory.deleteNotifications([1, 2, 3, 4, 5]);
-		await db.schema.alterTable('notifications', (table) => {
+		trx = await db.transaction();
+		await EntityFactory.deleteNotifications([1, 2, 3, 4]);
+		await trx.schema.alterTable('notifications', (table: any) => {
 			table.foreign('recipientId').references('id').inTable('users');
 			table.foreign('messageId').references('id').inTable('messages');
 		});

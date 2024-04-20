@@ -3,9 +3,9 @@ import { Channel, CreateChannelDto } from '@/api/channels/channelModel';
 import db from '../../../db/db';
 
 export const channelRepository = {
-	createChannel: async (channel: CreateChannelDto): Promise<Channel> => {
-		const ids = await db('channels').insert(channel);
-		const newChannel = await db('channels').where('id', ids[0]).first();
+	createChannel: async (trx: any, channel: CreateChannelDto): Promise<Channel> => {
+		const ids = await trx('channels').insert(channel);
+		const newChannel = await trx('channels').where('id', ids[0]).first();
 		return newChannel;
 	},
 	findAll: async (): Promise<Channel[]> => {
