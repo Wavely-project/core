@@ -18,11 +18,5 @@
 		"types": ["vitest/globals"]
 	},
 	"extends": [],
-	"exclude": ["node_modules"],
-	"include": [
-		"src/**/*.ts",
-		"../chennel/channelController.ts",
-		"../chennel/channelRouter.ts",
-		"../chennel/channelService.ts"
-	]
+	"exclude": ["node_modules"]
 }

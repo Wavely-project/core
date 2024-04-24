@@ -33,8 +33,8 @@ app.use(requestLogger());
 app.use('/health-check', healthCheckRouter);
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
-// app.use('/workspaces', workspaceRouter);
-// app.use('/channels', channelRouter);
+// app.use('/workspaces', workspaceRouter); // This is commented out because the workspaceRouter is not yet implemented
+// app.use('/channels', channelRouter);     // This is commented out because the channelRouter is not yet implemented
 
 // Swagger UI
 app.use(openAPIRouter);

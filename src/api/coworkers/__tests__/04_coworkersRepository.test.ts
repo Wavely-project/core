@@ -11,14 +11,11 @@ describe('coworkerRepository', () => {
 		});
 
 		await Promise.all([
-			EntityFactory.createCoworker(1, 1),
-			EntityFactory.createCoworker(1, 2),
-			EntityFactory.createCoworker(2, 1),
-			EntityFactory.createCoworker(2, 3),
+			EntityFactory.createCoworker(trx, 1, 1),
+			EntityFactory.createCoworker(trx, 1, 2),
+			EntityFactory.createCoworker(trx, 2, 1),
+			EntityFactory.createCoworker(trx, 2, 3),
 		]);
-	});
-	afterEach(async () => {
-		await trx.rollback();
 	});
 
 	test('createCoworker', async () => {
@@ -28,36 +25,34 @@ describe('coworkerRepository', () => {
 		expect(coworker).not.toBeNull();
 		const selectAll = await trx.select('*').from('coworkers');
 		expect(selectAll).toHaveLength(5);
-		// await EntityFactory.deleteCoworkers(3, 3);
+		await EntityFactory.deleteCoworkers(trx, 3, 3);
 	});
 
 	test('getAllUserWorkspaces', async () => {
-		const coworkers = await coworkerRepository.getAllUserWorkspaces(1);
+		const coworkers = await coworkerRepository.getAllUserWorkspaces(trx, 1);
 		expect(coworkers).toHaveLength(2);
 	});
 	test('getAllWorkspaceUsers', async () => {
-		const coworkers = await coworkerRepository.getAllWorkspaceUsers(3);
+		const coworkers = await coworkerRepository.getAllWorkspaceUsers(trx, 3);
 		expect(coworkers).toHaveLength(1);
 	});
 	test('removeCoworker', async () => {
-		trx = await db.transaction();
 		await coworkerRepository.removeCoworker(trx, 1, 1);
 		const coworkers = await trx('coworkers').where('userId', 1);
 		expect(coworkers).toHaveLength(1);
 	});
 
 	afterAll(async () => {
-		trx = await db.transaction();
 		await Promise.all([
-			EntityFactory.deleteCoworkers(1, 1),
-			EntityFactory.deleteCoworkers(1, 2),
-			EntityFactory.deleteCoworkers(2, 1),
-			EntityFactory.deleteCoworkers(2, 3),
+			EntityFactory.deleteCoworkers(trx, 1, 2),
+			EntityFactory.deleteCoworkers(trx, 2, 1),
+			EntityFactory.deleteCoworkers(trx, 2, 3),
 		]);
 
 		await trx.schema.alterTable('coworkers', (table: any) => {
 			table.foreign('userId').references('id').inTable('users');
 			table.foreign('workspaceId').references('id').inTable('workspaces');
 		});
+		trx.commit();
 	});
 });
