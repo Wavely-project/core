@@ -1,23 +1,21 @@
-import db from '../../../db/db';
 import { CreateInviteDto, Invite } from './invitesModel';
 
 const invitesRepository = {
-	createInvite: async (invite: CreateInviteDto): Promise<Invite> => {
-		const ids = await db('invites').insert(invite);
-		const newInvite = await db('invites').where('id', ids[0]).first();
-		return newInvite;
+	createInvite: async (trx: any, invite: CreateInviteDto): Promise<Invite> => {
+		const ids = await trx.insert(invite).into('invites');
+		return await trx.select('*').from('invites').where('id', ids[0]).first();
 	},
-	getInviteById: async (id: string): Promise<Invite | null> => {
-		return await db.select('*').from('invites').where('id', id).first();
+	getInviteById: async (trx: any, id: string): Promise<Invite | null> => {
+		return await trx.select('*').from('invites').where('id', id).first();
 	},
-	getInviteByWorkspaceId: async (workspaceId: string): Promise<Invite[]> => {
-		return await db.select('*').from('invites').where('workspaceId', workspaceId).andWhere('status', 'pending');
+	getInviteByWorkspaceId: async (trx: any, workspaceId: string): Promise<Invite[]> => {
+		return await trx.select('*').from('invites').where('workspaceId', workspaceId).andWhere('status', 'pending');
 	},
-	acceptInvite: async (id: string): Promise<void> => {
-		await db('invites').where('id', id).update({ status: 'accepted' });
+	acceptInvite: async (trx: any, id: string): Promise<void> => {
+		return await trx.update({ status: 'accepted' }).from('invites').where('id', id);
 	},
-	cancelInvite: async (id: string): Promise<void> => {
-		await db('invites').where('id', id).update({ status: 'cancelled' });
+	cancelInvite: async (trx: any, id: string): Promise<void> => {
+		return await trx.update({ status: 'cancelled' }).from('invites').where('id', id);
 	},
 };
 

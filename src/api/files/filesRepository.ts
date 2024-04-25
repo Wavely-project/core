@@ -1,22 +1,20 @@
-import db from '../../../db/db';
 import { CreateFileDto, File } from './filesModel';
 const filesRepository = {
-	createFile: async (file: CreateFileDto): Promise<File> => {
-		const ids = await db('files').insert(file);
-		const newFile = await db('files').where('id', ids[0]).first();
-		return newFile;
+	createFile: async (trx: any, file: CreateFileDto): Promise<File> => {
+		const ids = await trx.insert(file).into('files');
+		return await trx.select('*').from('files').where('id', ids[0]).first();
 	},
-	getFileById: async (id: number): Promise<File | null> => {
-		return await db.select('*').from('files').where('id', id).first();
+	getFileById: async (trx: any, id: number): Promise<File | null> => {
+		return await trx.select('*').from('files').where('id', id).first();
 	},
-	getFilesByMessageId: async (messageId: number): Promise<File[]> => {
-		return await db.select('*').from('files').where('messageId', messageId);
+	getFilesByMessageId: async (trx: any, messageId: number): Promise<File[]> => {
+		return await trx.select('*').from('files').where('messageId', messageId);
 	},
-	getUserFiles: async (userId: number): Promise<File[]> => {
-		return await db.select('*').from('files').where('uploadedBy', userId);
+	getUserFiles: async (trx: any, userId: number): Promise<File[]> => {
+		return await trx.select('*').from('files').where('uploadedBy', userId);
 	},
-	deleteFile: async (id: number): Promise<void> => {
-		await db('files').where('id', id).del();
+	deleteFile: async (trx: any, id: number): Promise<void> => {
+		return await trx.delete().from('files').where('id', id);
 	},
 };
 

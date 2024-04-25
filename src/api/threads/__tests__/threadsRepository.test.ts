@@ -1,51 +1,24 @@
-import db from '../../../../db/db';
-import EntityFactory from '../../../common/__tests__/entityFactory';
+import { mockedTxn } from '../../../common/__tests__/mocks';
 import threadsRepository from '../threadsRepository';
 
 describe('threadsRepository', () => {
-	beforeAll(async () => {
-		await db.schema.alterTable('threads', (table) => {
-			table.dropForeign('participantId');
-			table.dropForeign('parentMessageId');
-		});
-
-		await Promise.all([
-			EntityFactory.createThread(1, 1),
-			EntityFactory.createThread(1, 2),
-			EntityFactory.createThread(2, 1),
-			EntityFactory.createThread(2, 3),
-		]);
-	});
-
+	const trx: any = mockedTxn;
 	test('createThread', async () => {
-		await threadsRepository.createThread({ participantId: 3, parentMessageId: 3 });
-		const threads = await db('threads').where('participantId', 3);
-		expect(threads).toHaveLength(1);
+		await threadsRepository.createThread(trx, { participantId: 3, parentMessageId: 3 });
+		expect(trx.insert).toBeCalledWith({ participantId: 3, parentMessageId: 3 });
+		expect(trx.into).toBeCalledWith('threads');
 	});
 
 	test('getUserThreads', async () => {
-		const threads = await threadsRepository.getUserThreads(2);
-		expect(threads).toHaveLength(2);
+		await threadsRepository.getUserThreads(trx, 2);
+		expect(trx.select).toBeCalledWith('*');
+		expect(trx.from).toBeCalledWith('threads');
+		expect(trx.where).toBeCalledWith('participantId', 2);
 	});
 
 	test('deleteThread', async () => {
-		await threadsRepository.deleteThread(1, 1);
-		const threads = await db('threads').where('participantId', 1);
-		expect(threads).toHaveLength(1);
-	});
-
-	afterAll(async () => {
-		await Promise.all([
-			EntityFactory.deleteThread(1, 1),
-			EntityFactory.deleteThread(1, 2),
-			EntityFactory.deleteThread(2, 1),
-			EntityFactory.deleteThread(2, 3),
-			EntityFactory.deleteThread(3, 3),
-		]);
-
-		await db.schema.alterTable('threads', (table) => {
-			table.foreign('participantId').references('id').inTable('users');
-			table.foreign('parentMessageId').references('id').inTable('messages');
-		});
+		await threadsRepository.deleteThread(trx, 1, 1);
+		expect(trx.delete).toBeCalled();
+		expect(trx.from).toBeCalledWith('threads');
 	});
 });

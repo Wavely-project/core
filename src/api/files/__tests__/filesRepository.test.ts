@@ -1,23 +1,10 @@
-import db from '../../../../db/db';
-import EntityFactory from '../../../common/__tests__/entityFactory';
+import { mockedTxn } from '../../../common/__tests__/mocks';
 import filesRepository from '../filesRepository';
 
 describe('filesRepository', () => {
-	beforeAll(async () => {
-		await db.schema.alterTable('files', (table) => {
-			table.dropForeign('messageId');
-			table.dropForeign('uploadedBy');
-		});
-		await Promise.all([
-			EntityFactory.createFile(1, 1, 1),
-			EntityFactory.createFile(2, 1, 2),
-			EntityFactory.createFile(3, 2, 3),
-			EntityFactory.createFile(4, 2, 3),
-		]);
-	});
-
+	const trx: any = mockedTxn;
 	test('createFile', async () => {
-		const file = await filesRepository.createFile({
+		const fileData = {
 			fileName: 'file1',
 			fileSize: 100,
 			fileType: 'image/png',
@@ -25,33 +12,29 @@ describe('filesRepository', () => {
 			messageId: 1,
 			uploadedBy: 1,
 			uploadAt: new Date(),
-		});
-		const files = await db('files');
-		expect(files).toHaveLength(5);
-		await EntityFactory.deleteFiles([file.id]);
+		};
+		await filesRepository.createFile(trx, fileData);
+		expect(trx.insert).toBeCalledWith(fileData);
+		expect(trx.into).toBeCalledWith('files');
 	});
 
 	test('findByMessageId', async () => {
-		const files = await filesRepository.getFilesByMessageId(3);
-		expect(files).toHaveLength(2);
+		await filesRepository.getFilesByMessageId(trx, 3);
+		expect(trx.select).toBeCalledWith('*');
+		expect(trx.from).toBeCalledWith('files');
+		expect(trx.where).toBeCalledWith('messageId', 3);
 	});
 
 	test('getUserFiles', async () => {
-		const files = await filesRepository.getUserFiles(1);
-		expect(files).toHaveLength(2);
+		await filesRepository.getUserFiles(trx, 1);
+		expect(trx.select).toBeCalledWith('*');
+		expect(trx.from).toBeCalledWith('files');
+		expect(trx.where).toBeCalledWith('uploadedBy', 1);
 	});
 
 	test('deleteFile', async () => {
-		await filesRepository.deleteFile(1);
-		const files = await db('files').where('id', 1);
-		expect(files).toHaveLength(0);
-	});
-
-	afterAll(async () => {
-		await EntityFactory.deleteFiles([1, 2, 3, 4, 5]);
-		await db.schema.alterTable('files', (table) => {
-			table.foreign('messageId').references('id').inTable('messages');
-			table.foreign('uploadedBy').references('id').inTable('users');
-		});
+		await filesRepository.deleteFile(trx, 1);
+		expect(trx.delete).toBeCalled();
+		expect(trx.from).toBeCalledWith('files');
 	});
 });

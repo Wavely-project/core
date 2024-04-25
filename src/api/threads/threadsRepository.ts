@@ -1,17 +1,19 @@
-import db from '../../../db/db';
 import { CreateThreadDto, Thread } from './threadsModel';
 
 const threadsRepository = {
-	createThread: async (thread: CreateThreadDto): Promise<Thread> => {
-		const ids = await db('threads').insert(thread);
-		const newThread = await db('threads').where('participantId', ids[0]).first();
-		return newThread;
+	createThread: async (trx: any, thread: CreateThreadDto): Promise<Thread> => {
+		const ids = await trx.insert(thread).into('threads');
+		return await trx.select('*').from('threads').where('participantId', ids[0]).first();
 	},
-	getUserThreads: async (participantId: number): Promise<Thread[] | null> => {
-		return await db.select('*').from('threads').where('participantId', participantId);
+	getUserThreads: async (trx: any, participantId: number): Promise<Thread[] | null> => {
+		return await trx.select('*').from('threads').where('participantId', participantId);
 	},
-	deleteThread: async (participantId: number, messageId: number): Promise<void> => {
-		await db('threads').where('participantId', participantId).andWhere('parentMessageId', messageId).del();
+	deleteThread: async (trx: any, participantId: number, messageId: number): Promise<void> => {
+		return await trx
+			.delete()
+			.from('threads')
+			.where('participantId', participantId)
+			.andWhere('parentMessageId', messageId);
 	},
 };
 
