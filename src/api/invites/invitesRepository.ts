@@ -2,9 +2,8 @@ import { CreateInviteDto, Invite } from './invitesModel';
 
 const invitesRepository = {
 	createInvite: async (trx: any, invite: CreateInviteDto): Promise<Invite> => {
-		const ids = await trx('invites').insert(invite);
-		const newInvite = await trx('invites').where('id', ids[0]).first();
-		return newInvite;
+		const ids = await trx.insert(invite).into('invites');
+		return await trx.select('*').from('invites').where('id', ids[0]).first();
 	},
 	getInviteById: async (trx: any, id: string): Promise<Invite | null> => {
 		return await trx.select('*').from('invites').where('id', id).first();
@@ -13,10 +12,10 @@ const invitesRepository = {
 		return await trx.select('*').from('invites').where('workspaceId', workspaceId).andWhere('status', 'pending');
 	},
 	acceptInvite: async (trx: any, id: string): Promise<void> => {
-		await trx('invites').where('id', id).update({ status: 'accepted' });
+		return await trx.update({ status: 'accepted' }).from('invites').where('id', id);
 	},
 	cancelInvite: async (trx: any, id: string): Promise<void> => {
-		await trx('invites').where('id', id).update({ status: 'cancelled' });
+		return await trx.update({ status: 'cancelled' }).from('invites').where('id', id);
 	},
 };
 
