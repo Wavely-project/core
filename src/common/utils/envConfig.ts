@@ -10,4 +10,5 @@ export const env = cleanEnv(process.env, {
 	CORS_ORIGIN: str(),
 	COMMON_RATE_LIMIT_MAX_REQUESTS: num(),
 	COMMON_RATE_LIMIT_WINDOW_MS: num(),
+	NUMBER_OF_SEEDS: num(),
 });

@@ -1,19 +1,6 @@
-// import { faker } from '@faker-js/faker';
 import { Knex } from 'knex';
-// function createRandomUser() {
-// 	return {
-// 		id: faker.number.int({ min: 1, max: 100000 }),
-// 		username: faker.internet.userName(),
-// 		email: faker.internet.email(),
-// 		name: faker.person.fullName(),
-// 		password: faker.internet.password(),
-// 		bio: faker.lorem.sentence(),
-// 		avatarUrl: faker.image.avatar(),
-// 		status: 'online',
-// 		createdAt: new Date(),
-// 		updatedAt: new Date(),
-// 	};
-// }
+
+import { env } from '../../src/common/utils/envConfig';
 
 export function IncrementalIdGenerator(initialId: number = 0): () => number {
 	let currentId = initialId;
@@ -42,7 +29,7 @@ export async function seed(knex: Knex): Promise<void> {
 	};
 
 	const users: [object] = [{ ...seeder }];
-	for (let i = 1; i < 10; i++) {
+	for (let i = 1; i < env.NUMBER_OF_SEEDS; i++) {
 		increment = generateId();
 		users.push({
 			id: increment,

@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { Knex } from 'knex';
 
+import { env } from '../../src/common/utils/envConfig';
 import { IncrementalIdGenerator } from './01-userSeeding';
 /*
 messages {
@@ -23,26 +24,35 @@ const generateId = IncrementalIdGenerator(1);
 export async function seed(knex: Knex): Promise<void> {
 	// Deletes ALL existing entries
 	await knex('messages').del();
+	type Message = {
+		id: number;
+		senderId: number;
+		workspaceId: number;
+		channelId: number;
+		parentMessageId: number;
+		content: string;
+		createdAt: Date;
+		updatedAt: Date;
+	};
 	let increment = generateId();
-
-	const seeder: object = {
+	const seeder: Message = {
 		id: increment,
-		senderId: faker.number.int({ min: 1, max: 10 }),
-		workspaceId: faker.number.int({ min: 1, max: 10 }),
-		channelId: faker.number.int({ min: 1, max: 10 }),
+		senderId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
+		workspaceId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
+		channelId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
 		parentMessageId: 1,
 		content: `message ${increment}`,
 		createdAt: new Date(),
 		updatedAt: new Date(),
 	};
-	const messages: object[] = [{ ...seeder }];
-	for (let i = 1; i < 10; i++) {
+	const messages: Message[] = [{ ...seeder }];
+	for (let i = 1; i < env.NUMBER_OF_SEEDS; i++) {
 		increment = generateId();
 		messages.push({
 			id: increment,
-			senderId: faker.number.int({ min: 1, max: 10 }),
-			workspaceId: faker.number.int({ min: 1, max: 10 }),
-			channelId: faker.number.int({ min: 1, max: 10 }),
+			senderId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
+			workspaceId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
+			channelId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
 			parentMessageId: 1,
 			content: `message ${increment}`,
 			createdAt: new Date(),

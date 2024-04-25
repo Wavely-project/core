@@ -1,7 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { Knex } from 'knex';
 
-import { IncrementalIdGenerator } from './01-userSeeding';
 /*
 files {
   id uuid pk
@@ -17,6 +16,9 @@ files {
 files.message_id - messages.id
 files.uploaded_by > users.id
 */
+import { env } from '../../src/common/utils/envConfig';
+import { IncrementalIdGenerator } from './01-userSeeding';
+
 const generateId = IncrementalIdGenerator(1);
 export async function seed(knex: Knex): Promise<void> {
 	// Deletes ALL existing entries
@@ -25,27 +27,27 @@ export async function seed(knex: Knex): Promise<void> {
 	let increment = generateId();
 	const seeder = {
 		id: increment,
-		messageId: faker.number.int({ min: 1, max: 10 }),
-		uploadedBy: faker.number.int({ min: 1, max: 10 }),
+		messageId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
+		uploadedBy: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
 		fileName: `file ${increment}`,
 		fileSize: 20,
 		fileType: 'photos',
-		// content: 1,
-		uploadedAt: new Date(),
+		content: '1',
+		// uploadedAt: new Date(),
 	};
 
-	const files: [object] = [{ ...seeder }];
-	for (let i = 1; i < 10; i++) {
+	const files: object[] = [{ ...seeder }];
+	for (let i = 1; i < env.NUMBER_OF_SEEDS; i++) {
 		increment = generateId();
 		files.push({
 			id: increment,
-			messageId: faker.number.int({ min: 1, max: 10 }),
-			uploadedBy: faker.number.int({ min: 1, max: 10 }),
+			messageId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
+			uploadedBy: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
 			fileName: `file ${increment}`,
 			fileSize: 20,
 			fileType: 'photos',
-			// content: 1,
-			uploadedAt: new Date(),
+			content: '1',
+			// uploadedAt: new Date(),
 		});
 	}
 	await Promise.all(files.map((file) => knex('files').insert(file)));

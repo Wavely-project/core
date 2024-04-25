@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { Knex } from 'knex';
 
+import { env } from '../../src/common/utils/envConfig';
 import { IncrementalIdGenerator } from './01-userSeeding';
 /*
 channels {
@@ -25,8 +26,8 @@ export async function seed(knex: Knex): Promise<void> {
 	let increment = generateId();
 	const seeder = {
 		id: increment,
-		creatorId: faker.number.int({ min: 1, max: 10 }),
-		workspaceId: faker.number.int({ min: 1, max: 10 }),
+		creatorId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
+		workspaceId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
 		name: `channel ${increment}`,
 		description: `description ${increment}`,
 		type: 'public',
@@ -35,12 +36,12 @@ export async function seed(knex: Knex): Promise<void> {
 	};
 
 	const channels: [object] = [{ ...seeder }];
-	for (let i = 1; i < 10; i++) {
+	for (let i = 1; i < env.NUMBER_OF_SEEDS; i++) {
 		increment = generateId();
 		channels.push({
 			id: increment,
-			creatorId: faker.number.int({ min: 1, max: 10 }),
-			workspaceId: faker.number.int({ min: 1, max: 10 }),
+			creatorId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
+			workspaceId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
 			name: `channel ${increment}`,
 			description: `description ${increment}`,
 			type: 'public',
