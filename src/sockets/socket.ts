@@ -42,6 +42,7 @@ export function connectSocket(server: HttpServer) {
 		roomsEvents(io, socket);
 	});
 
+	global.io = io;
 	return io;
 }
 
