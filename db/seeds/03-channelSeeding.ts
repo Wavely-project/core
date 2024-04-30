@@ -15,6 +15,6 @@ export async function seed(knex: Knex): Promise<void> {
 		EntityFactory.createChannel(4, 2, 3, 'channel 4', 'Descrcription', 'public'), // channel 4 in workspace 3 created by user 2
 		EntityFactory.createChannel(5, 3, 4, 'channel 5', 'Descrcription', 'public'), // channel 5 in workspace 4 created by user 3
 		EntityFactory.createChannel(6, 3, 4, 'channel 6', 'Descrcription', 'public'), // channel 6 in workspace 4 created by user 3
-		EntityFactory.createChannel(7, 3, 5, 'channel 7', 'Descrcription', 'public'), // channel 7 in workspace 5 created by user 3
+		EntityFactory.createChannel(7, 5, 5, 'channel 7', 'Descrcription', 'public'), // channel 7 in workspace 5 created by user 5
 	]);
 }
