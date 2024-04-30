@@ -11,6 +11,7 @@ export async function seed(knex: Knex): Promise<void> {
 		EntityFactory.createCoworker(1, 1), // user 1 is coworker in workspace 1
 		EntityFactory.createCoworker(2, 1), // user 2 is coworker in workspace 1
 		EntityFactory.createCoworker(3, 1), // user 3 is coworker in workspace 1
+		EntityFactory.createCoworker(4, 1), // user 4 is coworker in workspace 1
 		EntityFactory.createCoworker(1, 2), // user 1 is coworker in workspace 2
 		EntityFactory.createCoworker(5, 2), // user 5 is coworker in workspace 2
 		EntityFactory.createCoworker(2, 3), // user 2 is coworker in workspace 3

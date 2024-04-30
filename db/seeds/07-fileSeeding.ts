@@ -11,8 +11,8 @@ export async function seed(knex: Knex): Promise<void> {
 	await Promise.all([
 		EntityFactory.createFile(1, 1, 1), // file 1  created by user 1 in message 1
 		EntityFactory.createFile(2, 1, 5), // file 2  created by user 1 in message 5
-		EntityFactory.createFile(3, 2, 12), // file 3  created by user 2 in message 6
-		EntityFactory.createFile(4, 3, 6), // file 4  created by user 3 in message 6
-		EntityFactory.createFile(5, 5, 11), // file 5  created by user 5 in message 11
+		EntityFactory.createFile(3, 5, 13), // file 3  created by user 5 in message 13
+		EntityFactory.createFile(4, 2, 15), // file 4  created by user 2 in message 15
+		EntityFactory.createFile(5, 3, 19), // file 5  created by user 3 in message 19
 	]);
 }

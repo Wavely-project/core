@@ -10,8 +10,8 @@ export async function seed(knex: Knex): Promise<void> {
 	await Promise.all([
 		EntityFactory.createWorkspace(1, 1, 'workspace 1', 'Descrcription', 'url'),
 		EntityFactory.createWorkspace(2, 1, 'workspace 2', 'Descrcription', 'url'),
-		EntityFactory.createWorkspace(3, 2, 'workspace 3', 'Descrcription', 'url'),
-		EntityFactory.createWorkspace(4, 3, 'workspace 4', 'Descrcription', 'url'),
-		EntityFactory.createWorkspace(5, 3, 'workspace 5', 'Descrcription', 'url'),
+		EntityFactory.createWorkspace(3, 3, 'workspace 3', 'Descrcription', 'url'),
+		EntityFactory.createWorkspace(4, 2, 'workspace 4', 'Descrcription', 'url'),
+		EntityFactory.createWorkspace(5, 5, 'workspace 5', 'Descrcription', 'url'),
 	]);
 }
