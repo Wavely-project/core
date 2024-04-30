@@ -1,27 +1,15 @@
-import { faker } from '@faker-js/faker';
 import { Knex } from 'knex';
 
-import { env } from '../../src/common/utils/envConfig';
-
+import EntityFactory from '../../src/common/__tests__/entityFactory';
 export async function seed(knex: Knex): Promise<void> {
 	// Deletes ALL existing entries
 	await knex('threads').del();
 
-	const seeder = {
-		participantId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
-		parentMessageId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
-	};
-
-	const threads: { participantId: number; parentMessageId: number }[] = [{ ...seeder }];
-	while (threads.length <= env.NUMBER_OF_SEEDS) {
-		const participantId = faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS });
-		const parentMessageId = faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS });
-		if (!threads.some((b) => b.participantId === participantId && b.parentMessageId === parentMessageId)) {
-			threads.push({
-				participantId,
-				parentMessageId,
-			});
-		}
-	}
-	await Promise.all(threads.map((thread) => knex('threads').insert(thread)));
+	// Inserts seed entries
+	/************ we need to reimplement thread concept in DB */
+	await Promise.all([
+		EntityFactory.createThread(1, 2), // thread 1 in channel 1 after message 2
+		EntityFactory.createThread(2, 5), // thread 2 in channel 1 after message 5
+		EntityFactory.createThread(5, 9), // thread 3 in channel 2 after message 9
+	]);
 }

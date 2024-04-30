@@ -1,54 +1,18 @@
-import { faker } from '@faker-js/faker';
 import { Knex } from 'knex';
 
-/*
-files {
-  id uuid pk
-  file_name string
-  file_size int 
-  file_type string
-  content blob
-  message_id uuid fk
-  uploaded_by uuid fk
-  upload_at date
-}
+import EntityFactory from '../../src/common/__tests__/entityFactory';
 
-files.message_id - messages.id
-files.uploaded_by > users.id
-*/
-import { env } from '../../src/common/utils/envConfig';
-import { IncrementalIdGenerator } from './01-userSeeding';
-
-const generateId = IncrementalIdGenerator(1);
 export async function seed(knex: Knex): Promise<void> {
 	// Deletes ALL existing entries
 	await knex('files').del();
 
-	let increment = generateId();
-	const seeder = {
-		id: increment,
-		messageId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
-		uploadedBy: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
-		fileName: `file ${increment}`,
-		fileSize: 20,
-		fileType: 'photos',
-		content: '1',
-		// uploadedAt: new Date(),
-	};
-
-	const files: object[] = [{ ...seeder }];
-	for (let i = 1; i < env.NUMBER_OF_SEEDS; i++) {
-		increment = generateId();
-		files.push({
-			id: increment,
-			messageId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
-			uploadedBy: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
-			fileName: `file ${increment}`,
-			fileSize: 20,
-			fileType: 'photos',
-			content: '1',
-			// uploadedAt: new Date(),
-		});
-	}
-	await Promise.all(files.map((file) => knex('files').insert(file)));
+	// Inserts seed entries
+	// how does the sequence go, do we create messeges first or create message once file sent?
+	await Promise.all([
+		EntityFactory.createFile(1, 1, 1), // file 1  created by user 1 in message 1
+		EntityFactory.createFile(2, 1, 5), // file 2  created by user 1 in message 5
+		EntityFactory.createFile(3, 2, 12), // file 3  created by user 2 in message 6
+		EntityFactory.createFile(4, 3, 6), // file 4  created by user 3 in message 6
+		EntityFactory.createFile(5, 5, 11), // file 5  created by user 5 in message 11
+	]);
 }

@@ -1,64 +1,31 @@
-import { faker } from '@faker-js/faker';
 import { Knex } from 'knex';
 
-import { env } from '../../src/common/utils/envConfig';
-import { IncrementalIdGenerator } from './01-userSeeding';
-/*
-messages {
-  id uuid pk
-  content string
-  sender_id uuid fk 
-  channel_id uuid fk
-  parent_message_id uuid fk
-  workspace_id uuid fk
-  createdAt date
-  updatedAt date
-}
+import EntityFactory from '../../src/common/__tests__/entityFactory';
 
-messages.sender_id > users.id
-messages.workspace_id > workspaces.id
-messages.channel_id > channels.id
-messages.parent_message_id > messages.id
-*/
-const generateId = IncrementalIdGenerator(1);
 export async function seed(knex: Knex): Promise<void> {
 	// Deletes ALL existing entries
 	await knex('messages').del();
-	type Message = {
-		id: number;
-		senderId: number;
-		workspaceId: number;
-		channelId: number;
-		parentMessageId: number;
-		content: string;
-		createdAt: Date;
-		updatedAt: Date;
-	};
-	let increment = generateId();
-	const seeder: Message = {
-		id: increment,
-		senderId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
-		workspaceId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
-		channelId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
-		parentMessageId: 1,
-		content: `message ${increment}`,
-		createdAt: new Date(),
-		updatedAt: new Date(),
-	};
-	const messages: Message[] = [{ ...seeder }];
-	for (let i = 1; i < env.NUMBER_OF_SEEDS; i++) {
-		increment = generateId();
-		messages.push({
-			id: increment,
-			senderId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
-			workspaceId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
-			channelId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
-			parentMessageId: 1,
-			content: `message ${increment}`,
-			createdAt: new Date(),
-			updatedAt: new Date(),
-		});
-	}
 
-	await Promise.all(messages.map((message) => knex('messages').insert(message)));
+	// Inserts seed entries
+	await Promise.all([
+		EntityFactory.createMessage(1, 1, 1, 1, 1, 'message 1'), // message 1 in channel 1 Sent by user 1
+		EntityFactory.createMessage(2, 2, 1, 1, 1, 'message 2'), // message 2 in channel 1 Sent by user 2
+		EntityFactory.createMessage(3, 3, 1, 1, 2, 'message 3'), // message 3 in channel 1 Sent by user 3
+		EntityFactory.createMessage(4, 4, 1, 1, 3, 'message 4'), // message 4 in channel 1 Sent by user 4
+		EntityFactory.createMessage(5, 1, 1, 1, 4, 'message 5'), // message 5 in channel 1 Sent by user 1
+		EntityFactory.createMessage(6, 3, 1, 1, 5, 'message 6'), // message 6 in channel 1 Sent by user 3
+
+		//******** Channel 2********/
+		EntityFactory.createMessage(7, 1, 2, 1, 7, 'message 7'), // message 7 in channel 2 Sent by user 1
+		EntityFactory.createMessage(8, 5, 2, 1, 7, 'message 8'), // message 8 in channel 2 Sent by user 5
+		EntityFactory.createMessage(9, 1, 2, 1, 8, 'message 9'), // message 9 in channel 2 Sent by user 1
+		EntityFactory.createMessage(10, 5, 2, 1, 9, 'message 10'), // message 10 in channel 2 Sent by user 5
+		EntityFactory.createMessage(11, 5, 2, 1, 9, 'message 11'), // message 11 in channel 2 Sent by user 5
+
+		//******** Channel 3********/
+		EntityFactory.createMessage(12, 2, 3, 2, 12, 'message 12'), // message 12 in channel 3 Sent by user 2
+		EntityFactory.createMessage(13, 6, 3, 2, 12, 'message 13'), // message 13 in channel 3 Sent by user 6
+		EntityFactory.createMessage(14, 2, 3, 2, 12, 'message 14'), // message 14 in channel 3 Sent by user 2
+	]);
+	//******** Channel 1********/
 }

@@ -1,49 +1,27 @@
-import { faker } from '@faker-js/faker';
 import { Knex } from 'knex';
 
-import { env } from '../../src/common/utils/envConfig';
-import { IncrementalIdGenerator } from './01-userSeeding';
+import EntityFactory from '../../src/common/__tests__/entityFactory';
 
-/*
-	notifications {
-	id uuid pk
-	recipient_id string fk
-	message_id string fk
-	type enum mention | new_message | invite
-	id_read boolean
-	created_at date
-	}
-
-	notifications.recipient_id > users.id
-	notifications.message_id < messages.id
- */
-
-const generateId = IncrementalIdGenerator(1);
 export async function seed(knex: Knex): Promise<void> {
 	// Deletes ALL existing entries
 	await knex('notifications').del();
 
-	let increment = generateId();
-	const seeder = {
-		id: increment,
-		recipientId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
-		messageId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
-		type: 'mention',
-		isRead: false,
-		createdAt: new Date(),
-	};
-
-	const notifications: object[] = [{ ...seeder }];
-	for (let i = 1; i < env.NUMBER_OF_SEEDS; i++) {
-		increment = generateId();
-		notifications.push({
-			id: increment,
-			recipientId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
-			messageId: faker.number.int({ min: 1, max: env.NUMBER_OF_SEEDS }),
-			type: 'mention',
-			isRead: false,
-			createdAt: new Date(),
-		});
-	}
-	await Promise.all(notifications.map((notification) => knex('notifications').insert(notification)));
+	// Inserts seed entries
+	await Promise.all([
+		EntityFactory.createNotification(1, 1, 3, 'newMessage'), // user 1 has new message
+		EntityFactory.createNotification(2, 2, 2, 'mention'), // user 2 has mention
+		EntityFactory.createNotification(3, 3, 5, 'newMessage'), // user 3 has new message
+		/******/
+		EntityFactory.createNotification(4, 5, 8, 'mention'), // user 5 has mention
+		EntityFactory.createNotification(5, 1, 9, 'newMessage'), // user 1 has new message
+		/***********/
+		//message 1 is the base message for all invites
+		EntityFactory.createNotification(6, 1, 1, 'invite'), // user 1 has invite
+		EntityFactory.createNotification(7, 2, 1, 'invite'), // user 2 has invite
+		EntityFactory.createNotification(8, 3, 1, 'invite'), // user 3 has invite
+		EntityFactory.createNotification(9, 4, 1, 'invite'), // user 4 has invite
+		EntityFactory.createNotification(10, 5, 1, 'invite'), // user 5 has invite
+		EntityFactory.createNotification(11, 5, 1, 'invite'), // user 5 has invite
+		EntityFactory.createNotification(12, 6, 1, 'invite'), // user 6 has invite
+	]);
 }

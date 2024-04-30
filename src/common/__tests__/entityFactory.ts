@@ -3,10 +3,11 @@ import { Member } from '@/api/members/memberModel';
 import { Notification } from '@/api/notifications/notificationsModel';
 import { Workspace } from '@/api/workspace/workspaceModel';
 
+import db from '../../../db/db';
 import { Invite } from '../../api/invites/invitesModel';
 import { Thread } from '../../api/threads/threadsModel';
 class EntityFactory {
-	createFile(trx: any, id: number, uploadedBy: number, messageId: number): Promise<File> {
+	async createFile(id: number, uploadedBy: number, messageId: number): Promise<File> {
 		const file = {
 			id: id,
 			fileName: 'file1',
@@ -17,19 +18,18 @@ class EntityFactory {
 			uploadedBy: uploadedBy,
 			uploadAt: new Date(),
 		};
-		return trx('files')
+		return await db('files')
 			.insert(file)
-			.then(() => trx('files').where('id', id).first());
+			.then(() => db('files').where('id', id).first());
 	}
 
-	deleteFiles(trx: any, id: number[]): Promise<void> {
-		return trx('files')
+	async deleteFiles(id: number[]): Promise<void> {
+		return await db('files')
 			.where((b: any) => b.whereIn('id', id))
 			.del();
 	}
 
-	createInvite(
-		trx: any,
+	async createInvite(
 		id: number,
 		senderId: number,
 		inviteeId: number,
@@ -46,19 +46,18 @@ class EntityFactory {
 			expiresAt: new Date(),
 			status: status,
 		};
-		return trx('invites')
+		return await db('invites')
 			.insert(invite)
-			.then(() => trx('invites').where('id', id).first());
+			.then(() => db('invites').where('id', id).first());
 	}
 
-	deleteInvites(trx: any, id: number[]): Promise<void> {
-		return trx('invites')
+	async deleteInvites(id: number[]): Promise<void> {
+		return await db('invites')
 			.where((b: any) => b.whereIn('id', id))
 			.del();
 	}
 
-	createNotification(
-		trx: any,
+	async createNotification(
 		id: number,
 		recipientId: number,
 		messageId: number,
@@ -73,64 +72,66 @@ class EntityFactory {
 			isRead: isRead,
 			createdAt: new Date(),
 		};
-		return trx('notifications')
+		return await db('notifications')
 			.insert(notification)
-			.then(() => trx('notifications').where('id', id).first());
+			.then(() => db('notifications').where('id', id).first());
 	}
 
-	deleteNotifications(trx: any, id: number[]): Promise<void> {
-		return trx('notifications')
+	async deleteNotifications(id: number[]): Promise<void> {
+		return await db('notifications')
 			.where((b: any) => b.whereIn('id', id))
 			.del();
 	}
 
-	createThread(trx: any, participantId: number, parentMessageId: number): Promise<Thread> {
+	async createThread(participantId: number, parentMessageId: number): Promise<Thread> {
 		const thread = {
 			participantId: participantId,
 			parentMessageId: parentMessageId,
 		};
-		return trx('threads')
+		return await db('threads')
 			.insert(thread)
-			.then(() => trx('threads').where('participantId', participantId).first());
+			.then(() => db('threads').where('participantId', participantId).first());
 	}
 
-	deleteThread(trx: any, participantId: number, parentMessageId: number): Promise<void> {
-		return trx('threads').where('participantId', participantId).andWhere('parentMessageId', parentMessageId).del();
+	async deleteThread(participantId: number, parentMessageId: number): Promise<void> {
+		return await db('threads')
+			.where('participantId', participantId)
+			.andWhere('parentMessageId', parentMessageId)
+			.del();
 	}
-	createMember(trx: any, userId: number, channelId: number): Promise<Member> {
+	async createMember(userId: number, channelId: number): Promise<Member> {
 		const member = {
 			userId: userId,
 			channelId: channelId,
 			createdAt: new Date(),
 		};
-		return trx('members')
+		return await db('members')
 			.insert(member)
-			.then(() => trx('members').where('userId', userId).first());
+			.then(() => db('members').where('userId', userId).first());
 	}
-	deleteMembers(trx: any, userId: number, channelId: number): Promise<void> {
-		return trx('members')
+	async deleteMembers(userId: number, channelId: number): Promise<void> {
+		return await db('members')
 			.where((b: any) => b.where('userId', userId))
 			.andWhere('channelId', channelId)
 			.del();
 	}
-	createCoworker(trx: any, userId: number, workspaceId: number): Promise<Coworker> {
+	async createCoworker(userId: number, workspaceId: number): Promise<Coworker> {
 		const coworker = {
 			userId: userId,
 			workspaceId: workspaceId,
 			createdAt: new Date(),
 		};
-		return trx('coworkers')
+		return await db('coworkers')
 			.insert(coworker)
-			.then(() => trx('coworkers').where('userId', userId).andWhere('workspaceId', workspaceId).first());
+			.then(() => db('coworkers').where('userId', userId).andWhere('workspaceId', workspaceId).first());
 	}
-	async deleteCoworkers(trx: any, userId: number, workspaceId: number): Promise<void> {
-		return await trx('coworkers')
+	async deleteCoworkers(userId: number, workspaceId: number): Promise<void> {
+		return await db('coworkers')
 			.where((b: any) => b.where('userId', userId))
 			.andWhere('workspaceId', workspaceId)
 			.del();
 	}
 	async createWorkspace(
-		trx: any,
 		id: number,
 		ownerId: number,
 		name: string,
@@ -147,33 +148,32 @@ class EntityFactory {
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		};
-		return await trx('workspaces')
+		return await db('workspaces')
 			.insert(workspace)
-			.then(() => trx('workspaces').where('id', id).first());
+			.then(() => db('workspaces').where('id', id).first());
 	}
-	async deleteWorkspaces(trx: any, id: number[]): Promise<void> {
-		return await trx('workspaces')
+	async deleteWorkspaces(id: number[]): Promise<void> {
+		return await db('workspaces')
 			.where((b: any) => b.whereIn('id', id))
 			.del();
 	}
-	async addReaction(trx: any, id: number, userId: number, messageId: number, emoji: string): Promise<void> {
+	async createReaction(id: number, userId: number, messageId: number, emoji: string): Promise<void> {
 		const reaction = {
 			id: id,
 			messageId: messageId,
 			userId: userId,
 			reaction: emoji,
 		};
-		return await trx('reactions')
+		return await db('reactions')
 			.insert(reaction)
-			.then(() => trx('reactions').where('id', id).first());
+			.then(() => db('reactions').where('id', id).first());
 	}
-	async deleteReactions(trx: any, id: number[]): Promise<void> {
-		return await trx('reactions')
+	async deleteReactions(id: number[]): Promise<void> {
+		return await db('reactions')
 			.where((b: any) => b.whereIn('id', id))
 			.del();
 	}
-	createMessage(
-		trx: any,
+	async createMessage(
 		id: number,
 		senderId: number,
 		channelId: number,
@@ -191,17 +191,16 @@ class EntityFactory {
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		};
-		return trx('messages')
+		return db('messages')
 			.insert(message)
-			.then(() => trx('messages').where('id', id).first());
+			.then(() => db('messages').where('id', id).first());
 	}
-	deleteMessages(trx: any, id: number[]): Promise<void> {
-		return trx('messages')
+	deleteMessages(id: number[]): Promise<void> {
+		return db('messages')
 			.where((b: any) => b.whereIn('id', id))
 			.del();
 	}
-	createChannel(
-		trx: any,
+	async createChannel(
 		id: number,
 		creatorId: number,
 		workspaceId: number,
@@ -219,12 +218,33 @@ class EntityFactory {
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		};
-		return trx('channels')
+		return await db('channels')
 			.insert(channel)
-			.then(() => trx('channels').where('id', id).first());
+			.then(() => db('channels').where('id', id).first());
 	}
-	async deleteChannels(trx: any, id: number[]): Promise<void> {
-		return await trx('channels')
+	async deleteChannels(id: number[]): Promise<void> {
+		return await db('channels')
+			.where((b: any) => b.whereIn('id', id))
+			.del();
+	}
+	async createUser(id: number, username: string, email: string, name: string, password: string): Promise<void> {
+		const user = {
+			id: id,
+			username: username,
+			email: email,
+			name: name,
+			password: password,
+			avatarUrl: '',
+			status: 'online',
+			createdAt: new Date(),
+			updatedAt: new Date(),
+		};
+		return await db('users')
+			.insert(user)
+			.then(() => db('users').where('id', id).first());
+	}
+	async deleteUsers(id: number[]): Promise<void> {
+		return await db('users')
 			.where((b: any) => b.whereIn('id', id))
 			.del();
 	}

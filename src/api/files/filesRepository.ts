@@ -1,6 +1,7 @@
 import { CreateFileDto, File } from './filesModel';
 const filesRepository = {
 	createFile: async (trx: any, file: CreateFileDto): Promise<File> => {
+		//Question: we should create a new message in the database to once we create file?
 		const ids = await trx.insert(file).into('files');
 		return await trx.select('*').from('files').where('id', ids[0]).first();
 	},
