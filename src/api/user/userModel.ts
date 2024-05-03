@@ -33,3 +33,6 @@ export type CreateUserDto = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
 export const GetUserSchema = z.object({
 	params: z.object({ id: commonValidations.id }),
 });
+export const UpdateUserSchema = UserSchema.partial();
+export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;
+export const DeleteUserSchema = GetUserSchema;

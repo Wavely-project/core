@@ -1,8 +1,9 @@
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { Router } from 'express';
 
-import { GetUserSchema, UserSchema } from '@/api/user/userModel';
+import { DeleteUserSchema, GetUserSchema, UserSchema } from '@/api/user/userModel';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
+import { messageResponse } from '@/common/utils/commonResponses';
 import { validateRequest } from '@/common/utils/httpHandlers';
 
 import AuthController from '../auth/authController';
@@ -30,7 +31,18 @@ export const userRouter: Router = (() => {
 		responses: createApiResponse(UserSchema, 'Success'),
 	});
 
-	router.get('/:id', [AuthController.authenticate, validateRequest(GetUserSchema)], UserController.getUserById);
+	router.get('/:id', [AuthController.authenticate, validateRequest(GetUserSchema)], UserController.getById);
+
+	userRegistry.registerPath({
+		method: 'delete',
+		path: '/users/{id}',
+		tags: ['User'],
+		security: [{ [bearerAuth.name]: [] }],
+		request: { params: DeleteUserSchema.shape.params },
+		responses: createApiResponse(messageResponse, 'Success'),
+	});
+
+	router.delete('/:id', [AuthController.authenticate, validateRequest(DeleteUserSchema)], UserController.delete);
 
 	return router;
 })();

@@ -25,3 +25,5 @@ export const CreateReactionSchema = z.object({
 		reaction: z.string(),
 	}),
 });
+
+export const RemoveReactionSchema = CreateReactionSchema;
