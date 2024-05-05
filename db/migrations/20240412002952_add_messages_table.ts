@@ -24,10 +24,9 @@ export async function up(knex: Knex): Promise<void> {
 		table.string('content').notNullable();
 		table.integer('senderId').unsigned();
 		table.integer('channelId').unsigned();
-		table.integer('parentMessageId').unsigned();
+		table.integer('parentMessageId').unsigned().nullable();
 		table.integer('workspaceId').unsigned();
 
-		// TODO: add this to another migrationFile
 		table.foreign('senderId').references('id').inTable('users');
 		table.foreign('workspaceId').references('id').inTable('workspaces');
 		table.foreign('channelId').references('id').inTable('channels');

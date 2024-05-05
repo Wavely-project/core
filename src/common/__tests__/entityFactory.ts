@@ -60,14 +60,13 @@ class EntityFactory {
 	async createNotification(
 		id: number,
 		recipientId: number,
-		messageId: number,
 		type: 'mention' | 'newMessage' | 'invite',
 		isRead: boolean = false
 	): Promise<Notification> {
 		const notification = {
 			id: id,
 			recipientId: recipientId,
-			messageId: messageId,
+			// entityId: entityId,
 			type: type,
 			isRead: isRead,
 			createdAt: new Date(),
@@ -178,7 +177,7 @@ class EntityFactory {
 		senderId: number,
 		channelId: number,
 		workspaceId: number,
-		parentMessageId: number,
+		parentMessageId: number | null,
 		content: string
 	): Promise<void> {
 		const message = {
