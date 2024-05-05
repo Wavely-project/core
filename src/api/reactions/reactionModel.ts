@@ -25,3 +25,10 @@ export const CreateReactionSchema = z.object({
 		reaction: z.string(),
 	}),
 });
+export const GetReactionSchema = z.object({
+	params: z.object({ id: z.number() }),
+});
+
+export const DeleteReactionSchema = z.object({
+	params: z.object({ id: z.number() }),
+});

@@ -32,14 +32,14 @@ class EntityFactory {
 		trx: any,
 		id: number,
 		senderId: number,
-		inviteeId: number,
+		inviteeEmail: string,
 		workspaceId: number,
 		status: 'pending' | 'accepted' | 'cancelled' = 'pending'
 	): Promise<Invite> {
 		const invite = {
 			id: id,
 			senderId: senderId,
-			inviteeId: inviteeId,
+			inviteeEmail: inviteeEmail,
 			workspaceId: workspaceId,
 			createdAt: new Date(),
 			updatedAt: new Date(),
@@ -178,7 +178,7 @@ class EntityFactory {
 		senderId: number,
 		channelId: number,
 		workspaceId: number,
-		parentMessageId: number,
+		parentMessageId: any,
 		content: string
 	): Promise<void> {
 		const message = {
@@ -186,7 +186,7 @@ class EntityFactory {
 			senderId: senderId,
 			channelId: channelId,
 			workspaceId: workspaceId,
-			parentMessageId: parentMessageId,
+			parentMessageId: parentMessageId ? parentMessageId : null,
 			content: content,
 			createdAt: new Date(),
 			updatedAt: new Date(),
@@ -195,11 +195,16 @@ class EntityFactory {
 			.insert(message)
 			.then(() => trx('messages').where('id', id).first());
 	}
-	deleteMessages(trx: any, id: number[]): Promise<void> {
-		return trx('messages')
+
+	async deleteMessages(trx: any, id: number[]): Promise<void> {
+		await trx('threads')
+			.where((b: any) => b.whereIn('parentMessageId', id))
+			.del();
+		return await trx('messages')
 			.where((b: any) => b.whereIn('id', id))
 			.del();
 	}
+
 	createChannel(
 		trx: any,
 		id: number,

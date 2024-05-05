@@ -25,11 +25,20 @@ export const UserSchema = BaseUserSchema.extend({
 export const CreateUserSchema = BaseUserSchema.extend({
 	password: z.string(),
 });
+
 export type CreateUser = z.infer<typeof CreateUserSchema>;
-
 export type CreateUserDto = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
+export type UpdateUser = z.infer<typeof UpdateUserSchema>;
 
-// Input Validation for 'GET users/:id' endpoint
 export const GetUserSchema = z.object({
 	params: z.object({ id: commonValidations.id }),
+});
+
+export const UpdateUserSchema = z.object({
+	body: z.object({
+		name: z.string(),
+		email: z.string(),
+		password: z.string(),
+		bio: z.string().optional(),
+	}),
 });

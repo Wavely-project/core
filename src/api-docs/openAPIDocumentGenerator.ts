@@ -1,13 +1,22 @@
 import { OpenApiGeneratorV3, OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 
-// import { channelRegistery } from '@/api/channels/channelRouter';
+import { channelRegistery } from '@/api/channels/channelRouter';
 import { healthCheckRegistry } from '@/api/healthCheck/healthCheckRouter';
+import { messageRegistery } from '@/api/messages/messageRouter';
 import { userRegistry } from '@/api/user/userRouter';
+import { workspaceRegistry } from '@/api/workspace/workspaceRouter';
 
-// import { workspaceRegistry } from '@/api/workspace/workspaceRouter';
 import { authRegistry } from '../api/auth/authRouter';
+
 export function generateOpenAPIDocument() {
-	const registry = new OpenAPIRegistry([healthCheckRegistry, userRegistry, authRegistry]);
+	const registry = new OpenAPIRegistry([
+		healthCheckRegistry,
+		authRegistry,
+		userRegistry,
+		workspaceRegistry,
+		channelRegistery,
+		messageRegistery,
+	]);
 	const generator = new OpenApiGeneratorV3(registry.definitions);
 
 	return generator.generateDocument({

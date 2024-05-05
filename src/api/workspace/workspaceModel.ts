@@ -21,13 +21,31 @@ export type CreateWorkspace = z.infer<typeof BaseWorkspaceSchema>;
 export type CreateWorkspaceDto = Omit<Workspace, 'id' | 'createdAt' | 'updatedAt'>;
 
 // Input Validation for 'GET workspaces/:id' endpoint
-export const GetWorkspaceSchema = z.object({
-	params: z.object({ id: commonValidations.id }),
-});
+
 export const CreateWorkspaceSchema = z.object({
 	body: z.object({
 		name: z.string(),
 		description: z.string(),
 		avatarUrl: z.string(),
 	}),
+});
+export const GetWorkspaceSchema = z.object({
+	params: z.object({ id: commonValidations.id }),
+	query: z.object({
+		limit: z.string().optional(),
+		// page: z.string().optional(),
+		cursor: z.string().optional(),
+	}),
+});
+
+export const UpdateWorkspaceSchema = z.object({
+	body: z.object({
+		name: z.string(),
+		description: z.string(),
+		avatarUrl: z.string(),
+	}),
+	params: z.object({ id: commonValidations.id }),
+});
+export const DeleteWorkspaceSchema = z.object({
+	params: z.object({ id: commonValidations.id }),
 });
