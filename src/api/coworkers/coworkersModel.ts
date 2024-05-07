@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { User } from '../user/userModel';
+
 export const BaseCoworkerSchema = z.object({
 	userId: z.number(),
 	workspaceId: z.number(),
@@ -20,3 +22,5 @@ export const CreateCoworkerSchema = z.object({
 		channelId: z.number(),
 	}),
 });
+
+export type CoworkerData = Coworker & { userData: User };

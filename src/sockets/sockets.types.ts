@@ -1,6 +1,12 @@
 import { Server, Socket } from 'socket.io';
 
+import { Channel, DeleteChannelData } from '../api/channels/channelModel';
+import { Coworker, CoworkerData } from '../api/coworkers/coworkersModel';
+import { MemberData } from '../api/members/memberModel';
+import { DeleteMessageData, Message } from '../api/messages/messageModel';
+import { Reaction } from '../api/reactions/reactionModel';
 import { User } from '../api/user/userModel';
+import { Workspace } from '../api/workspace/workspaceModel';
 
 // server to client
 export interface S2C {
@@ -9,41 +15,41 @@ export interface S2C {
 	//TODO: update this when repository layer is implemented.
 
 	// Messages
-	newMessage: (message: string) => void;
-	updateMessage: (message: string) => void;
-	deleteMessage: (message: string) => void;
+	newMessage: (message: Message) => void;
+	updateMessage: (message: Message) => void;
+	deleteMessage: (message: DeleteMessageData) => void;
 
 	// channels
-	addChannel: (channel: string) => void;
-	updateChannel: (channel: string) => void;
-	deleteChannel: (channel: string) => void;
+	addChannel: (channel: Channel) => void;
+	updateChannel: (channel: Channel) => void;
+	deleteChannel: (channel: DeleteChannelData) => void;
 
 	// members
-	addMember: (member: string) => void;
-	removeMember: (member: string) => void;
+	addMember: (member: MemberData) => void;
+	removeMember: (member: MemberData) => void;
 
 	// reactions
-	addReaction: (reaction: string) => void;
-	removeReaction: (reaction: string) => void;
+	addReaction: (reaction: Reaction) => void;
+	removeReaction: (reaction: Reaction) => void;
 
 	// workspace
-	addWorkspace: (workspace: string) => void;
-	updateWorkspace: (workspace: string) => void;
-	removeWorkspace: (workspace: string) => void;
+	addWorkspace: (workspace: Workspace) => void;
+	updateWorkspace: (workspace: Workspace) => void;
+	removeWorkspace: (workspaceId: number) => void;
 
 	// coworkers
-	addCoworker: (coworker: string) => void;
-	removeCoworker: (coworker: string) => void;
+	addCoworker: (coworker: CoworkerData) => void;
+	removeCoworker: (coworker: Coworker) => void;
 
 	// user
 	userUpdate: (user: User) => void;
 	userDelete: (user: User) => void;
 	typing: (user: User) => void;
-	status: (message: string) => void;
+	status: (userData: User) => void;
 
 	// notifications
-	addNotification: (notification: string) => void;
-	removeNotification: (notification: string) => void;
+	addNotification: (notification: Notification) => void;
+	removeNotification: (notificationId: number) => void;
 }
 
 // client to server
