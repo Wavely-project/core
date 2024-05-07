@@ -15,6 +15,9 @@ import rateLimiter from '@/common/middleware/rateLimiter';
 import requestLogger from '@/common/middleware/requestLogger';
 import { env } from '@/common/utils/envConfig';
 
+import { filesRouter } from './api/files/filesRoutes';
+import { notificationRouter } from './api/notifications/notificationsRoutes';
+import { reactionsRouter } from './api/reactions/reactionsRouter';
 import { connectSocket } from './sockets/socket';
 
 const logger = pino({ name: 'server start' });
@@ -41,6 +44,9 @@ app.use('/auth', authRouter);
 app.use('/users', userRouter);
 // app.use('/workspaces', workspaceRouter); // This is commented out because the workspaceRouter is not yet implemented
 // app.use('/channels', channelRouter);     // This is commented out because the channelRouter is not yet implemented
+app.use('/files', filesRouter);
+app.use('/notifications', notificationRouter);
+app.use('/reactions', reactionsRouter);
 
 // Swagger UI
 app.use(openAPIRouter);
