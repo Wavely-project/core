@@ -16,6 +16,7 @@
 		"test:cov": "vitest run --coverage",
 		"migrate": "knex migrate:latest",
 		"rollback": "knex migrate:rollback",
+		"seed": "knex seed:run",
 		"prepare": "husky",
 		"release": "release-it"
 	},
