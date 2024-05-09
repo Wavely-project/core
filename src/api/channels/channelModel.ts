@@ -5,7 +5,7 @@ import { commonValidations } from '@/common/utils/commonValidation';
 export const BaseChannelSchema = z.object({
 	name: z.string(),
 	description: z.string(),
-	type: z.string(),
+	type: z.enum(['public', 'private', 'direct']),
 	workspaceId: z.number(),
 	creatorId: z.number(),
 });
@@ -50,3 +50,8 @@ export const DeleteChannelSchema = z.object({
 });
 
 export const Channels = z.array(ChannelSchema);
+
+export type DeleteChannelData = Omit<
+	Channel,
+	'createdAt' | 'updatedAt' | 'name' | 'description' | 'type' | 'creatorId'
+>;

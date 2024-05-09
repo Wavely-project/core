@@ -2,7 +2,9 @@ import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { Router } from 'express';
 
 import { GetUserSchema, UpdateUserSchema, UserSchema } from '@/api/user/userModel';
+import { DeleteUserSchema, GetUserSchema, UserSchema } from '@/api/user/userModel';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
+import { messageResponse } from '@/common/utils/commonResponses';
 import { validateRequest } from '@/common/utils/httpHandlers';
 
 import AuthController from '../auth/authController';

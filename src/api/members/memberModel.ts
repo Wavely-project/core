@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { User } from '../user/userModel';
+
 export const BaseMemberSchema = z.object({
 	userId: z.number(),
 	channelId: z.number(),
@@ -20,3 +22,5 @@ export const CreateMemberSchema = z.object({
 		channelId: z.number(),
 	}),
 });
+
+export type MemberData = Member & { userData: User };

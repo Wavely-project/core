@@ -3,6 +3,11 @@ import { OpenApiGeneratorV3, OpenAPIRegistry } from '@asteasolutions/zod-to-open
 import { channelRegistery } from '@/api/channels/channelRouter';
 import { healthCheckRegistry } from '@/api/healthCheck/healthCheckRouter';
 import { messageRegistery } from '@/api/messages/messageRouter';
+import { filesRegistry } from '@/api/files/filesRoutes';
+// import { channelRegistery } from '@/api/channels/channelRouter';
+import { healthCheckRegistry } from '@/api/healthCheck/healthCheckRouter';
+import { notificationsRegistry } from '@/api/notifications/notificationsRoutes';
+import { reactionsRegistry } from '@/api/reactions/reactionsRouter';
 import { userRegistry } from '@/api/user/userRouter';
 import { workspaceRegistry } from '@/api/workspace/workspaceRouter';
 
@@ -16,6 +21,11 @@ export function generateOpenAPIDocument() {
 		workspaceRegistry,
 		channelRegistery,
 		messageRegistery,
+		userRegistry,
+		authRegistry,
+		filesRegistry,
+		notificationsRegistry,
+		reactionsRegistry,
 	]);
 	const generator = new OpenApiGeneratorV3(registry.definitions);
 
