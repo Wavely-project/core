@@ -24,6 +24,10 @@ export type CreateChannelDto = Omit<Channel, 'id' | 'createdAt' | 'updatedAt'>;
 // Input Validation for 'GET Channel /:id' endpoint
 export const GetChannelSchema = z.object({
 	params: z.object({ id: commonValidations.id }),
+	query: z.object({
+		limit: z.string().optional(),
+		cursor: z.string().optional(),
+	}),
 });
 export const CreateChannelSchema = z.object({
 	body: z.object({
@@ -33,6 +37,19 @@ export const CreateChannelSchema = z.object({
 		workspaceId: commonValidations.id,
 	}),
 });
+export const UpdateChannelSchema = z.object({
+	body: z.object({
+		name: z.string(),
+		description: z.string(),
+		type: z.enum(['public', 'private', 'direct']),
+	}),
+	params: z.object({ id: commonValidations.id }),
+});
+export const DeleteChannelSchema = z.object({
+	params: z.object({ id: commonValidations.id }),
+});
+
+export const Channels = z.array(ChannelSchema);
 
 export type DeleteChannelData = Omit<
 	Channel,

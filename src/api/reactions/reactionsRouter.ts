@@ -2,9 +2,10 @@ import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { Router } from 'express';
 
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
+import { messageResponse } from '@/common/utils/commonResponses';
 
 import { validateRequest } from '../../common/utils/httpHandlers';
-import { CreateReactionSchema, ReactionSchema, RemoveReactionSchema } from './reactionModel';
+import { CreateReactionSchema, DeleteReactionSchema, ReactionSchema } from './reactionModel';
 import reactionsController from './reactionsController';
 
 export const reactionsRegistry = new OpenAPIRegistry();
@@ -30,7 +31,7 @@ export const reactionsRouter: Router = (() => {
 	router.post('/add', validateRequest(CreateReactionSchema), reactionsController.add);
 
 	reactionsRegistry.registerPath({
-		method: 'patch',
+		method: 'delete',
 		path: '/reactions/delete',
 		tags: ['Reactions'],
 		request: {
@@ -40,10 +41,10 @@ export const reactionsRouter: Router = (() => {
 				},
 			},
 		},
-		responses: createApiResponse(ReactionSchema, 'Success'),
+		responses: createApiResponse(messageResponse, 'Success'),
 	});
 
-	router.delete('/delete', validateRequest(RemoveReactionSchema), reactionsController.delete);
+	router.delete('/delete', validateRequest(DeleteReactionSchema), reactionsController.delete);
 
 	return router;
 })();

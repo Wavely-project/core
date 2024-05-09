@@ -97,4 +97,27 @@ export const userService = {
 			return new InternalServiceResponse(ResponseStatus.Failed, null);
 		}
 	},
+	// updateUser: async (id: number, user: UpdateUser): Promise<ServiceResponse<User | null>> => {
+	// 	try {
+	// 		const updatedUser = await userRepository.updateUser(id, user);
+	// 		if (!updatedUser) {
+	// 			return new ServiceResponse(ResponseStatus.Failed, 'User not found', null, StatusCodes.NOT_FOUND);
+	// 		}
+	// 		return new ServiceResponse<User>(ResponseStatus.Success, 'User updated', updatedUser, StatusCodes.OK);
+	// 	} catch (ex) {
+	// 		const errorMessage = `Error updating user with id ${id}: ${(ex as Error).message}`;
+	// 		logger.error(errorMessage);
+	// 		return new ServiceResponse(ResponseStatus.Failed, errorMessage, null, StatusCodes.INTERNAL_SERVER_ERROR);
+	// 	}
+	// },
+	// deleteUser: async (id: number): Promise<ServiceResponse<User | null>> => {
+	// 	try {
+	// 		await userRepository.deleteUser(id);
+	// 		return new ServiceResponse<User>(ResponseStatus.Success, 'User deleted', null, StatusCodes.OK);
+	// 	} catch (ex) {
+	// 		const errorMessage = `Error deleting user with id ${id}: ${(ex as Error).message}`;
+	// 		logger.error(errorMessage);
+	// 		return new ServiceResponse(ResponseStatus.Failed, errorMessage, null, StatusCodes.INTERNAL_SERVER_ERROR);
+	// 	}
+	// },
 };

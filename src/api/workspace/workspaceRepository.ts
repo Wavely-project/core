@@ -1,7 +1,7 @@
-import { CreateWorkspaceDto, Workspace } from '@/api/workspace/workspaceModel';
+import { CreateWorkspace, Workspace } from '@/api/workspace/workspaceModel';
 
 export const workspaceRepository = {
-	createWorkspace: async (trx: any, workspace: CreateWorkspaceDto): Promise<Workspace> => {
+	createWorkspace: async (trx: any, workspace: CreateWorkspace): Promise<Workspace> => {
 		const ids = await trx.insert(workspace).into('workspaces');
 		const newWorkspace = await trx.select('*').from('workspaces').where('id', ids[0]).first();
 		return newWorkspace;

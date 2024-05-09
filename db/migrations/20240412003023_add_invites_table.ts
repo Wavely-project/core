@@ -20,8 +20,8 @@ export async function up(knex: Knex): Promise<void> {
 	return knex.schema.createTable('invites', (table) => {
 		table.increments('id').primary();
 		table.integer('workspaceId').unsigned();
-		table.integer('inviteeId').unsigned();
 		table.integer('senderId').unsigned();
+		table.integer('inviteeId').unsigned();
 
 		table.timestamps(true, true, true);
 		table.timestamp('expiresAt').notNullable();

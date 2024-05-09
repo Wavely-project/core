@@ -23,8 +23,39 @@ export const CreateMessageSchema = z.object({
 		senderId: z.number(),
 		channelId: z.number(),
 		workspaceId: z.number(),
-		parentMessageId: z.number(),
+		parentMessageId: z.any(),
 	}),
 });
 
-export type DeleteMessageData = Omit<Message, 'id' | 'createdAt' | 'updatedAt' | 'content' | 'parentMessageId'>;
+export const UpdateMessageSchema = z.object({
+	body: z.object({
+		content: z.string(),
+	}),
+	params: z.object({ id: z.number() }),
+});
+
+export const DeleteMessageSchema = z.object({
+	params: z.object({ id: z.number() }),
+});
+
+export const GetMessageSchema = z.object({
+	params: z.object({ id: z.number() }),
+	query: z.object({
+		cursor: z.string().optional(),
+		limit: z.string().optional(),
+	}),
+});
+
+export const GetChannelMessagesSchema = z.object({
+	params: z.object({ id: z.number() }),
+});
+
+export const GetChannelThreadsSchema = z.object({
+	params: z.object({ id: z.number() }),
+});
+
+export const GetThreadSchema = z.object({
+	params: z.object({ id: z.number() }),
+});
+
+export const Messages = z.array(MessageSchema);
