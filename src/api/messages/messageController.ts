@@ -7,7 +7,8 @@ const MessageController = {
 	getChannelMessages: async (req: Request, res: Response) => {
 		const channelId = parseInt(req.params.id);
 		const { cursor, limit } = req.query;
-		const messages = await messageRepository.getAllChannelMessages(channelId, cursor, limit);
+		console.log(cursor, ' ', limit);
+		const messages = await messageRepository.getAllChannelMessages(channelId);
 		res.json(messages);
 	},
 	getMessageById: async (req: Request, res: Response) => {
@@ -15,12 +16,11 @@ const MessageController = {
 		res.json({ id });
 	},
 	sendMessage: async (req: Request, res: Response) => {
-		const { content, channelId, workspaceId, parentMessageId } = req.body;
+		const { content, channelId, parentMessageId } = req.body;
 
 		const createMessagePayload: CreateMessage = {
 			content,
 			channelId,
-			workspaceId,
 			senderId: res.locals.user.id,
 			parentMessageId,
 		};

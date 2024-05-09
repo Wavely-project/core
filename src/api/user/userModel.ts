@@ -44,6 +44,5 @@ export const UpdateUserSchema = z.object({
 });
 
 export const Users = z.array(UserSchema);
-export const UpdateUserSchema = UserSchema.partial();
-export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;
+export type UpdateUserDto = z.infer<typeof UpdateUserSchema.shape.body>;
 export const DeleteUserSchema = GetUserSchema;

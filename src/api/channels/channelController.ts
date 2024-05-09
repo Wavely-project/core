@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 
 import { CreateChannel } from './channelModel';
-import { channelRepository } from './channelRepository';
 
 const ChannelController = {
 	getChannelById: async (req: Request, res: Response) => {
@@ -32,8 +31,14 @@ const ChannelController = {
 	getWorkspaceChannels: async (req: Request, res: Response) => {
 		const workspaceId = parseInt(req.params.id);
 		const { cursor, limit } = req.query;
-		const workspaceChannels = await channelRepository.getWorkspaceChannels(workspaceId, cursor, limit);
-		res.json(workspaceChannels);
+		console.log(cursor, limit, workspaceId);
+		res.json({ 1: 1 });
+	},
+	getWorkspaceThreads: async (req: Request, res: Response) => {
+		const workspaceId = parseInt(req.params.id);
+		const { cursor, limit } = req.query;
+		console.log(cursor, limit, workspaceId);
+		res.json({ 1: 1 });
 	},
 };
 

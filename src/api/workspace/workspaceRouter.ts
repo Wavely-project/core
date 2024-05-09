@@ -1,15 +1,16 @@
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { Router } from 'express';
-import { z } from 'zod';
 
 import * as Schemas from '@/api/workspace/workspaceModel';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
+import { messageResponse } from '@/common/utils/commonResponses';
 import { validateRequest } from '@/common/utils/httpHandlers';
 
 import AuthController from '../auth/authController';
 import ChannelController from '../channels/channelController';
 import { Channels } from '../channels/channelModel';
 import CoworkersController from '../coworkers/coworkersController';
+import { Threads } from '../threads/threadsModel';
 import { Users } from '../user/userModel';
 import WorkspaceController from './workspaceController';
 
@@ -93,7 +94,7 @@ export const workspaceRouter: Router = (() => {
 		tags: ['Workspace'],
 		security: [{ [bearerAuth.name]: [] }],
 		request: { params: Schemas.DeleteWorkspaceSchema.shape.params },
-		responses: createApiResponse(z.object({ deletedRows: z.number() }), 'Success'),
+		responses: createApiResponse(messageResponse, 'Success'),
 	});
 
 	router.delete(
@@ -131,7 +132,20 @@ export const workspaceRouter: Router = (() => {
 		ChannelController.getWorkspaceChannels
 	);
 
-	//TODO: add threads.
+	workspaceRegistry.registerPath({
+		method: 'get',
+		path: '/workspaces/{id}/threads',
+		tags: ['Workspace'],
+		security: [{ [bearerAuth.name]: [] }],
+		request: { params: Schemas.GetWorkspaceSchema.shape.params, query: Schemas.GetWorkspaceSchema.shape.query },
+		responses: createApiResponse(Threads, 'Success'),
+	});
+
+	router.get(
+		'/:id/threads',
+		[AuthController.authenticate, validateRequest(Schemas.GetWorkspaceSchema)],
+		ChannelController.getWorkspaceThreads
+	);
 
 	return router;
 })();

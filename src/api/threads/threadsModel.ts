@@ -11,3 +11,4 @@ const ThreadSchema = z.object({
 export type Thread = z.infer<typeof ThreadSchema>;
 export const CreateThreadSchema = ThreadSchema;
 export type CreateThreadDto = z.infer<typeof CreateThreadSchema>;
+export const Threads = z.array(ThreadSchema);

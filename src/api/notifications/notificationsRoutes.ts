@@ -5,7 +5,6 @@ import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 import { messageResponse } from '@/common/utils/commonResponses';
 
 import { validateRequest } from '../../common/utils/httpHandlers';
-import { MessageSchema } from '../messages/messageModel';
 import notificationsController from './notificationsController';
 import { notificationIdSchema, notificationSchema } from './notificationsModel';
 
@@ -32,7 +31,7 @@ export const notificationRouter: Router = (() => {
 		path: '/notifications/{id}/read',
 		tags: ['Notifications'],
 		request: { params: notificationIdSchema.shape.params },
-		responses: createApiResponse(MessageSchema, 'Success'),
+		responses: createApiResponse(notificationSchema, 'Success'),
 	});
 
 	router.patch('/:id/read', validateRequest(notificationIdSchema), notificationsController.markAsRead);
@@ -42,7 +41,7 @@ export const notificationRouter: Router = (() => {
 		path: '/notifications/{id}/unread',
 		tags: ['Notifications'],
 		request: { params: notificationIdSchema.shape.params },
-		responses: createApiResponse(MessageSchema, 'Success'),
+		responses: createApiResponse(notificationSchema, 'Success'),
 	});
 
 	router.patch('/:id/unread', validateRequest(notificationIdSchema), notificationsController.markAsRead);

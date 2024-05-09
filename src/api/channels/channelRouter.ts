@@ -1,6 +1,5 @@
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { Router } from 'express';
-import { z } from 'zod';
 
 import {
 	ChannelSchema,
@@ -10,6 +9,7 @@ import {
 	UpdateChannelSchema,
 } from '@/api/channels/channelModel';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
+import { messageResponse } from '@/common/utils/commonResponses';
 import { validateRequest } from '@/common/utils/httpHandlers';
 
 import AuthController from '../auth/authController';
@@ -104,7 +104,7 @@ export const channelRouter: Router = (() => {
 		tags: ['Channel'],
 		security: [{ [bearerAuth.name]: [] }],
 		request: { params: GetChannelSchema.shape.params },
-		responses: createApiResponse(z.object({ deletedRows: z.number() }), 'Success'),
+		responses: createApiResponse(messageResponse, 'Success'),
 	});
 
 	router.delete(

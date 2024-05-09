@@ -2,6 +2,7 @@ import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { Router } from 'express';
 
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
+import { messageResponse } from '@/common/utils/commonResponses';
 import { validateRequest } from '@/common/utils/httpHandlers';
 
 import AuthController from '../auth/authController';
@@ -99,7 +100,7 @@ export const messagesRouter: Router = (() => {
 		request: {
 			params: DeleteMessageSchema.shape.params,
 		},
-		responses: createApiResponse(MessageSchema, 'Success'),
+		responses: createApiResponse(messageResponse, 'Success'),
 	});
 
 	router.delete(
