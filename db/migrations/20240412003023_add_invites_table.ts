@@ -21,7 +21,7 @@ export async function up(knex: Knex): Promise<void> {
 		table.increments('id').primary();
 		table.integer('workspaceId').unsigned();
 		table.integer('senderId').unsigned();
-		table.string('inviteeEmail').notNullable();
+		table.integer('inviteeId').unsigned();
 
 		table.timestamps(true, true, true);
 		table.timestamp('expiresAt').notNullable();
