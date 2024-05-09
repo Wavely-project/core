@@ -48,3 +48,5 @@ export const UpdateChannelSchema = z.object({
 export const DeleteChannelSchema = z.object({
 	params: z.object({ id: commonValidations.id }),
 });
+
+export const Channels = z.array(ChannelSchema);

@@ -8,9 +8,9 @@ import { validateRequest } from '@/common/utils/httpHandlers';
 
 import AuthController from '../auth/authController';
 import ChannelController from '../channels/channelController';
-import { ChannelSchema } from '../channels/channelModel';
+import { Channels } from '../channels/channelModel';
 import CoworkersController from '../coworkers/coworkersController';
-import { UserSchema } from '../user/userModel';
+import { Users } from '../user/userModel';
 import WorkspaceController from './workspaceController';
 
 export const workspaceRegistry = new OpenAPIRegistry();
@@ -51,16 +51,6 @@ export const workspaceRouter: Router = (() => {
 
 	workspaceRegistry.registerPath({
 		method: 'get',
-		path: '/workspaces',
-		tags: ['Workspace'],
-		security: [{ [bearerAuth.name]: [] }],
-		request: {},
-		responses: createApiResponse(Schemas.WorkspaceSchema, 'Success'),
-	});
-
-	router.get('/', AuthController.authenticate, WorkspaceController.getWorkspaces);
-	workspaceRegistry.registerPath({
-		method: 'get',
 		path: '/workspaces/{id}',
 		tags: ['Workspace'],
 		security: [{ [bearerAuth.name]: [] }],
@@ -73,6 +63,7 @@ export const workspaceRouter: Router = (() => {
 		[AuthController.authenticate, validateRequest(Schemas.GetWorkspaceSchema)],
 		WorkspaceController.getWorkspaceById
 	);
+
 	workspaceRegistry.registerPath({
 		method: 'patch',
 		path: '/workspaces/{id}',
@@ -117,9 +108,8 @@ export const workspaceRouter: Router = (() => {
 		tags: ['Workspace'],
 		security: [{ [bearerAuth.name]: [] }],
 		request: { params: Schemas.GetWorkspaceSchema.shape.params },
-		responses: createApiResponse(UserSchema, 'Success'),
+		responses: createApiResponse(Users, 'Success'),
 	});
-
 	router.get(
 		'/:id/users',
 		[AuthController.authenticate, validateRequest(Schemas.GetWorkspaceSchema)],
@@ -132,7 +122,7 @@ export const workspaceRouter: Router = (() => {
 		tags: ['Workspace'],
 		security: [{ [bearerAuth.name]: [] }],
 		request: { params: Schemas.GetWorkspaceSchema.shape.params, query: Schemas.GetWorkspaceSchema.shape.query },
-		responses: createApiResponse(ChannelSchema, 'Success'),
+		responses: createApiResponse(Channels, 'Success'),
 	});
 
 	router.get(
@@ -140,6 +130,8 @@ export const workspaceRouter: Router = (() => {
 		[AuthController.authenticate, validateRequest(Schemas.GetWorkspaceSchema)],
 		ChannelController.getWorkspaceChannels
 	);
+
+	//TODO: add threads.
 
 	return router;
 })();

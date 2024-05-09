@@ -1,4 +1,4 @@
-import { CreateUserDto, UpdateUser, User } from '@/api/user/userModel';
+import { CreateUserDto, User } from '@/api/user/userModel';
 
 import db from '../../../db/db';
 
@@ -23,13 +23,5 @@ export const userRepository = {
 
 	findByUsername: async (username: string): Promise<User | null> => {
 		return await db.select('*').from('users').where('username', username).first();
-	},
-	updateUser: async (id: number, user: UpdateUser): Promise<User> => {
-		await db('users').where('id', id).update(user);
-		const updatedUser = await db('users').where('id', id).first();
-		return updatedUser;
-	},
-	deleteUser: async (id: number): Promise<null> => {
-		return await db('users').where('id', id).delete();
 	},
 };

@@ -63,3 +63,5 @@ export const GetChannelThreadsSchema = z.object({
 export const GetThreadSchema = z.object({
 	params: z.object({ id: z.number() }),
 });
+
+export const Messages = z.array(MessageSchema);

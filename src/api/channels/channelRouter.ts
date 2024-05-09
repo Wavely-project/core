@@ -15,8 +15,8 @@ import { validateRequest } from '@/common/utils/httpHandlers';
 import AuthController from '../auth/authController';
 import MembersController from '../members/memberController';
 import MessageController from '../messages/messageController';
-import { MessageSchema } from '../messages/messageModel';
-import { UserSchema } from '../user/userModel';
+import { Messages } from '../messages/messageModel';
+import { Users } from '../user/userModel';
 import ChannelController from './channelController';
 
 export const channelRegistery = new OpenAPIRegistry();
@@ -120,7 +120,7 @@ export const channelRouter: Router = (() => {
 		tags: ['Channel'],
 		security: [{ bearerAuth: [] }],
 		request: { params: GetChannelSchema.shape.params },
-		responses: createApiResponse(UserSchema, 'Success'),
+		responses: createApiResponse(Users, 'Success'),
 	});
 
 	router.get(
@@ -136,7 +136,7 @@ export const channelRouter: Router = (() => {
 		tags: ['Channel'],
 		security: [{ bearerAuth: [] }],
 		request: { params: GetChannelSchema.shape.params, query: GetChannelSchema.shape.query },
-		responses: createApiResponse(MessageSchema, 'Success'),
+		responses: createApiResponse(Messages, 'Success'),
 	});
 
 	router.get(

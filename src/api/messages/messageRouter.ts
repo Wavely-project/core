@@ -22,9 +22,9 @@ const bearerAuth = messageRegistery.registerComponent('securitySchemes', 'bearer
 	bearerFormat: 'JWT',
 });
 
-// messageRegistery.register('Message', MessageSchema);
+messageRegistery.register('Message', MessageSchema);
 
-export const messageRouter: Router = (() => {
+export const messagesRouter: Router = (() => {
 	const router = express.Router();
 
 	messageRegistery.registerPath({
@@ -94,7 +94,7 @@ export const messageRouter: Router = (() => {
 	messageRegistery.registerPath({
 		method: 'delete',
 		path: '/messages/:id',
-		tags: ['Message '],
+		tags: ['Message'],
 		security: [{ [bearerAuth.name]: [] }],
 		request: {
 			params: DeleteMessageSchema.shape.params,

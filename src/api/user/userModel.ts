@@ -42,3 +42,5 @@ export const UpdateUserSchema = z.object({
 		bio: z.string().optional(),
 	}),
 });
+
+export const Users = z.array(UserSchema);
