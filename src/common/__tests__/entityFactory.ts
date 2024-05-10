@@ -226,12 +226,20 @@ class EntityFactory {
 			.where((b: any) => b.whereIn('id', id))
 			.del();
 	}
-	async createUser(id: number, username: string, email: string, name: string, password: string): Promise<void> {
+	async createUser(
+		id: number,
+		username: string,
+		email: string,
+		firstName: string,
+		lastName: string,
+		password: string
+	): Promise<void> {
 		const user = {
 			id: id,
 			username: username,
 			email: email,
-			name: name,
+			firstName: firstName,
+			lastName: lastName,
 			password: password,
 			avatarUrl: '',
 			status: 'online',
