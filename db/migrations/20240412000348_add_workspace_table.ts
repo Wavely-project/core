@@ -8,7 +8,18 @@ export async function up(knex: Knex): Promise<void> {
 		table.string('avatarUrl');
 		table.integer('ownerId').unsigned();
 		table.foreign('ownerId').references('id').inTable('users');
-		table.timestamps(true, true, true);
+
+		table
+			.dateTime('createdAt')
+			.notNullable()
+			.defaultTo(knex.raw('CURRENT_TIMESTAMP'));
+
+		table
+			.dateTime('updatedAt')
+			.notNullable()
+			.defaultTo(
+				knex.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+			);
 	});
 }
 

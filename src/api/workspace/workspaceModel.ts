@@ -43,6 +43,8 @@ export const UpdateWorkspaceSchema = z.object({
 	params: z.object({ id: commonValidations.id }),
 });
 
+export type UpdateWorkspace = z.infer<typeof UpdateWorkspaceSchema.shape.body>;
+
 export const DeleteWorkspaceSchema = z.object({
 	params: z.object({ id: commonValidations.id }),
 });

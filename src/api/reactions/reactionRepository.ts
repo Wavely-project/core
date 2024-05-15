@@ -10,7 +10,10 @@ export const reactionRepository = {
 	},
 
 	getReactionsByMessageId: async (messageId: number): Promise<Reaction[]> => {
-		return await db.select('*').from('reactions').where('messageId', messageId);
+		return await db
+			.select('*')
+			.from('reactions')
+			.where('messageId', messageId);
 	},
 
 	deleteReaction: async (id: number): Promise<void> => {

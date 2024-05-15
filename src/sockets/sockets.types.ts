@@ -3,7 +3,7 @@ import { Server, Socket } from 'socket.io';
 import { Channel, DeleteChannelData } from '../api/channels/channelModel';
 import { Coworker, CoworkerData } from '../api/coworkers/coworkersModel';
 import { MemberData } from '../api/members/memberModel';
-import { DeleteMessageData, Message } from '../api/messages/messageModel';
+import { deleteMessageData, Message } from '../api/messages/messageModel';
 import { Reaction } from '../api/reactions/reactionModel';
 import { User } from '../api/user/userModel';
 import { Workspace } from '../api/workspace/workspaceModel';
@@ -12,12 +12,10 @@ import { Workspace } from '../api/workspace/workspaceModel';
 export interface S2C {
 	emitHi: (greeting: string) => void; // simple pings
 
-	//TODO: update this when repository layer is implemented.
-
 	// Messages
 	newMessage: (message: Message) => void;
 	updateMessage: (message: Message) => void;
-	deleteMessage: (message: DeleteMessageData) => void;
+	deleteMessage: (message: deleteMessageData) => void;
 
 	// channels
 	addChannel: (channel: Channel) => void;

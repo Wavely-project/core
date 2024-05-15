@@ -2,11 +2,16 @@ import { authorize } from '@thream/socketio-jwt';
 import { Server as HttpServer } from 'http';
 import { Server } from 'socket.io';
 
-import { User } from '../api/user/userModel';
-import { userService } from '../api/user/userService';
 import { env } from '../common/utils/envConfig';
 import roomsEvents from './roomsEvents';
-import { C2S, data, S2C, ServerEvents, SocketClient, SocketServer } from './sockets.types';
+import {
+	C2S,
+	data,
+	S2C,
+	ServerEvents,
+	SocketClient,
+	SocketServer,
+} from './sockets.types';
 
 // refer to https://socket.io/docs/v4/server-application-structure#each-file-registers-its-own-event-handlers
 // to know more about the structure of this files.
@@ -15,16 +20,19 @@ import { C2S, data, S2C, ServerEvents, SocketClient, SocketServer } from './sock
 // to know more about the types used in this file, and how to define them.
 
 export function connectSocket(server: HttpServer) {
-	const io = new Server<C2S, S2C, ServerEvents, data>(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
+	const io = new Server<C2S, S2C, ServerEvents, data>(server, {
+		cors: { origin: '*', methods: ['GET', 'POST'] },
+	});
 	if (env.NODE_ENV === 'development') {
 		io.use(
 			authorize({
 				secret: env.JWT_SECRET,
-				onAuthentication: async (user: User) => {
-					const res = await userService.findById(user.id);
-					if (!res) throw new Error('User not found');
-					return res.responseObject;
-				},
+				//TODO: mmmm, need a trx??
+				// onAuthentication: async (reqUser: User) => {
+				// 	const user = await userService.getById(reqUser.id);
+				// 	if (!user) throw new Error('User not found');
+				// 	return user;
+				// },
 			})
 		);
 	}

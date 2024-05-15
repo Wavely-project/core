@@ -8,8 +8,14 @@ const filesRepository = {
 	getFileById: async (trx: any, id: number): Promise<File | null> => {
 		return await trx.select('*').from('files').where('id', id).first();
 	},
-	getFilesByMessageId: async (trx: any, messageId: number): Promise<File[]> => {
-		return await trx.select('*').from('files').where('messageId', messageId);
+	getFilesByMessageId: async (
+		trx: any,
+		messageId: number
+	): Promise<File[]> => {
+		return await trx
+			.select('*')
+			.from('files')
+			.where('messageId', messageId);
 	},
 	getUserFiles: async (trx: any, userId: number): Promise<File[]> => {
 		return await trx.select('*').from('files').where('uploadedBy', userId);

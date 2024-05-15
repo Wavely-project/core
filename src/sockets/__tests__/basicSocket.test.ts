@@ -1,6 +1,9 @@
 import { type Socket as ClientSocket } from 'socket.io-client';
 
-import { SocketClient as ServerSocket, SocketServer as Server } from '../sockets.types';
+import {
+	SocketClient as ServerSocket,
+	SocketServer as Server,
+} from '../sockets.types';
 import { closeSocket, initSocket } from './setupSocketTesting';
 
 describe('basic socket', () => {

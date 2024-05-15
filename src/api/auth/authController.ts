@@ -1,13 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
-import { handleServiceResponse } from '../../common/utils/httpHandlers';
+import {
+	asyncHandler,
+	handleServiceResponse,
+} from '../../common/utils/httpHandlers';
 import { CreateUser } from '../user/userModel';
 import authService from './authService';
 
 const AuthController = {
-	signup: async (req: Request, res: Response) => {
+	signup: asyncHandler(async (req: Request, res: Response) => {
 		const { email, username, name, password } = req.body;
-
 		const createUserPayload: CreateUser = {
 			email,
 			username,
@@ -15,24 +18,34 @@ const AuthController = {
 			password,
 		};
 
-		const serviceResponse = await authService.signup(createUserPayload);
-		handleServiceResponse(serviceResponse, res);
-	},
-	login: async (req: Request, res: Response) => {
+		const data = await authService.signup(createUserPayload, res.trx);
+		handleServiceResponse(res, data, 'OK');
+	}),
+	login: asyncHandler(async (req: Request, res: Response) => {
 		const { email, password } = req.body;
 
-		const serviceResponse = await authService.login(email, password);
-		handleServiceResponse(serviceResponse, res);
-	},
-	authenticate: async (req: Request, res: Response, next: NextFunction) => {
-		const response = await authService.authenticate(req.headers.authorization || '');
-		if (response.success) {
-			res.locals.user = response.responseObject;
-			return next();
+		const tokenAndUser = await authService.login(email, password, res.trx);
+		handleServiceResponse(res, tokenAndUser, 'OK');
+	}),
+	authenticate: asyncHandler(
+		async (req: Request, res: Response, next: NextFunction) => {
+			const user = await authService.authenticate(
+				req.headers.authorization || '',
+				res.trx
+			);
+			if (user) {
+				res.locals.user = user;
+				next();
+				return;
+			}
+			handleServiceResponse(
+				res,
+				null,
+				'TOKENN',
+				StatusCodes.UNAUTHORIZED
+			);
 		}
-
-		handleServiceResponse(response, res);
-	},
+	),
 };
 
 export default AuthController;

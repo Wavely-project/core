@@ -6,6 +6,7 @@ export const mockedTxn: any = {
 	select: vi.fn().mockReturnThis(),
 	from: vi.fn().mockReturnThis(),
 	where: vi.fn().mockReturnThis(),
+	whereIn: vi.fn().mockReturnThis(),
 	insert: vi.fn().mockReturnThis(),
 	into: vi.fn().mockReturnThis(),
 	first: vi.fn(),

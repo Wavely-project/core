@@ -23,14 +23,25 @@ export async function up(knex: Knex): Promise<void> {
 		table.integer('senderId').unsigned();
 		table.integer('inviteeId').unsigned();
 
-		table.timestamps(true, true, true);
 		table.timestamp('expiresAt').notNullable();
-		table.enum('status', ['pending', 'accepted', 'cancelled']).defaultTo('pending');
+		table
+			.enum('status', ['pending', 'accepted', 'cancelled'])
+			.defaultTo('pending');
 
 		// TODO: add this to another migrationFile
 		table.foreign('workspaceId').references('id').inTable('workspaces');
 		table.foreign('inviteeId').references('id').inTable('users');
 		table.foreign('senderId').references('id').inTable('users');
+		table
+			.dateTime('createdAt')
+			.notNullable()
+			.defaultTo(knex.raw('CURRENT_TIMESTAMP'));
+		table
+			.dateTime('updatedAt')
+			.notNullable()
+			.defaultTo(
+				knex.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+			);
 	});
 }
 

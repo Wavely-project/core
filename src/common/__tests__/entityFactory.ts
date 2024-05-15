@@ -7,7 +7,11 @@ import db from '../../../db/db';
 import { Invite } from '../../api/invites/invitesModel';
 import { Thread } from '../../api/threads/threadsModel';
 class EntityFactory {
-	async createFile(id: number, uploadedBy: number, messageId: number): Promise<File> {
+	async createFile(
+		id: number,
+		uploadedBy: number,
+		messageId: number
+	): Promise<File> {
 		const file = {
 			id: id,
 			fileName: 'file1',
@@ -16,7 +20,6 @@ class EntityFactory {
 			content: 'content',
 			messageId: messageId,
 			uploadedBy: uploadedBy,
-			uploadAt: new Date(),
 		};
 		return await db('files')
 			.insert(file)
@@ -41,8 +44,6 @@ class EntityFactory {
 			senderId: senderId,
 			inviteeId: inviteeId,
 			workspaceId: workspaceId,
-			createdAt: new Date(),
-			updatedAt: new Date(),
 			expiresAt: new Date(),
 			status: status,
 		};
@@ -69,7 +70,6 @@ class EntityFactory {
 			// entityId: entityId,
 			type: type,
 			isRead: isRead,
-			createdAt: new Date(),
 		};
 		return await db('notifications')
 			.insert(notification)
@@ -82,17 +82,25 @@ class EntityFactory {
 			.del();
 	}
 
-	async createThread(participantId: number, parentMessageId: number): Promise<Thread> {
+	async createThread(
+		participantId: number,
+		parentMessageId: number
+	): Promise<Thread> {
 		const thread = {
 			participantId: participantId,
 			parentMessageId: parentMessageId,
 		};
 		return await db('threads')
 			.insert(thread)
-			.then(() => db('threads').where('participantId', participantId).first());
+			.then(() =>
+				db('threads').where('participantId', participantId).first()
+			);
 	}
 
-	async deleteThread(participantId: number, parentMessageId: number): Promise<void> {
+	async deleteThread(
+		participantId: number,
+		parentMessageId: number
+	): Promise<void> {
 		return await db('threads')
 			.where('participantId', participantId)
 			.andWhere('parentMessageId', parentMessageId)
@@ -102,7 +110,6 @@ class EntityFactory {
 		const member = {
 			userId: userId,
 			channelId: channelId,
-			createdAt: new Date(),
 		};
 		return await db('members')
 			.insert(member)
@@ -114,15 +121,22 @@ class EntityFactory {
 			.andWhere('channelId', channelId)
 			.del();
 	}
-	async createCoworker(userId: number, workspaceId: number): Promise<Coworker> {
+	async createCoworker(
+		userId: number,
+		workspaceId: number
+	): Promise<Coworker> {
 		const coworker = {
 			userId: userId,
 			workspaceId: workspaceId,
-			createdAt: new Date(),
 		};
 		return await db('coworkers')
 			.insert(coworker)
-			.then(() => db('coworkers').where('userId', userId).andWhere('workspaceId', workspaceId).first());
+			.then(() =>
+				db('coworkers')
+					.where('userId', userId)
+					.andWhere('workspaceId', workspaceId)
+					.first()
+			);
 	}
 	async deleteCoworkers(userId: number, workspaceId: number): Promise<void> {
 		return await db('coworkers')
@@ -144,8 +158,6 @@ class EntityFactory {
 			description: description,
 			ownerId: ownerId,
 			avatarUrl: avatarUrl,
-			createdAt: new Date(),
-			updatedAt: new Date(),
 		};
 		return await db('workspaces')
 			.insert(workspace)
@@ -156,7 +168,12 @@ class EntityFactory {
 			.where((b: any) => b.whereIn('id', id))
 			.del();
 	}
-	async createReaction(id: number, userId: number, messageId: number, emoji: string): Promise<void> {
+	async createReaction(
+		id: number,
+		userId: number,
+		messageId: number,
+		emoji: string
+	): Promise<void> {
 		const reaction = {
 			id: id,
 			messageId: messageId,
@@ -176,7 +193,6 @@ class EntityFactory {
 		id: number,
 		senderId: number,
 		channelId: number,
-		workspaceId: number,
 		parentMessageId: number | null,
 		content: string
 	): Promise<void> {
@@ -184,11 +200,8 @@ class EntityFactory {
 			id: id,
 			senderId: senderId,
 			channelId: channelId,
-			workspaceId: workspaceId,
 			parentMessageId: parentMessageId,
 			content: content,
-			createdAt: new Date(),
-			updatedAt: new Date(),
 		};
 		return db('messages')
 			.insert(message)
@@ -214,8 +227,6 @@ class EntityFactory {
 			name: name,
 			description: description,
 			type: type,
-			createdAt: new Date(),
-			updatedAt: new Date(),
 		};
 		return await db('channels')
 			.insert(channel)
@@ -226,7 +237,13 @@ class EntityFactory {
 			.where((b: any) => b.whereIn('id', id))
 			.del();
 	}
-	async createUser(id: number, username: string, email: string, name: string, password: string): Promise<void> {
+	async createUser(
+		id: number,
+		username: string,
+		email: string,
+		name: string,
+		password: string
+	): Promise<void> {
 		const user = {
 			id: id,
 			username: username,
@@ -235,8 +252,6 @@ class EntityFactory {
 			password: password,
 			avatarUrl: '',
 			status: 'online',
-			createdAt: new Date(),
-			updatedAt: new Date(),
 		};
 		return await db('users')
 			.insert(user)

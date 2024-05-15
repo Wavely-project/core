@@ -14,7 +14,7 @@ import type { Knex } from 'knex';
 	notifications.message_id < messages.id
  */
 
-//TODO: fix related repo and stuff.
+//TODO: fix related repo and stuff, also add URL.
 export async function up(knex: Knex): Promise<void> {
 	await knex.schema.createTable('notifications', (table) => {
 		table.increments('id').primary();

@@ -1,19 +1,39 @@
-import { CreateWorkspace, Workspace } from '@/api/workspace/workspaceModel';
+import { Knex } from 'knex';
+
+import {
+	CreateWorkspace,
+	UpdateWorkspace,
+	Workspace,
+} from '@/api/workspace/workspaceModel';
 
 export const workspaceRepository = {
-	createWorkspace: async (trx: any, workspace: CreateWorkspace): Promise<Workspace> => {
+	create: async (
+		workspace: CreateWorkspace,
+		trx: Knex.Transaction
+	): Promise<Workspace> => {
 		const ids = await trx.insert(workspace).into('workspaces');
-		const newWorkspace = await trx.select('*').from('workspaces').where('id', ids[0]).first();
-		return newWorkspace;
+		return trx.select('*').from('workspaces').where('id', ids[0]).first();
 	},
-	findAllUserWorkspaces: async (trx: any, userId: number): Promise<Workspace[]> => {
-		return await trx.select('*').from('workspaces').where('ownerId', userId);
+	update: (
+		workspaceId: number,
+		workspace: UpdateWorkspace,
+		trx: Knex.Transaction
+	): Promise<Workspace> => {
+		return trx
+			.update(workspace)
+			.where('id', workspaceId)
+			.from('workspaces');
 	},
-
-	findById: async (trx: any, id: number): Promise<Workspace | null> => {
-		return await trx.select('*').from('workspaces').where('id', id).first();
+	getByIds: (
+		workspaceIds: number[],
+		trx: Knex.Transaction
+	): Promise<Workspace[]> => {
+		return trx.select('*').from('workspaces').whereIn('id', workspaceIds);
 	},
-	deleteWorkspace: async (trx: any, id: number): Promise<void> => {
-		return await trx.delete().from('workspaces').where('id', id);
+	getById: (id: number, trx: Knex.Transaction): Promise<Workspace | null> => {
+		return trx.select('*').from('workspaces').where('id', id).first();
+	},
+	delete: (id: number, trx: Knex.Transaction): Promise<number> => {
+		return trx.delete().from('workspaces').where('id', id);
 	},
 };

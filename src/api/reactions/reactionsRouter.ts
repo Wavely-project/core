@@ -5,7 +5,11 @@ import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 import { messageResponse } from '@/common/utils/commonResponses';
 
 import { validateRequest } from '../../common/utils/httpHandlers';
-import { CreateReactionSchema, DeleteReactionSchema, ReactionSchema } from './reactionModel';
+import {
+	CreateReactionSchema,
+	DeleteReactionSchema,
+	ReactionSchema,
+} from './reactionModel';
 import reactionsController from './reactionsController';
 
 export const reactionsRegistry = new OpenAPIRegistry();
@@ -21,14 +25,20 @@ export const reactionsRouter: Router = (() => {
 		request: {
 			body: {
 				content: {
-					'application/json': { schema: CreateReactionSchema.shape.body },
+					'application/json': {
+						schema: CreateReactionSchema.shape.body,
+					},
 				},
 			},
 		},
 		responses: createApiResponse(ReactionSchema, 'Success'),
 	});
 
-	router.post('/add', validateRequest(CreateReactionSchema), reactionsController.add);
+	router.post(
+		'/add',
+		validateRequest(CreateReactionSchema),
+		reactionsController.add
+	);
 
 	reactionsRegistry.registerPath({
 		method: 'delete',
@@ -37,14 +47,20 @@ export const reactionsRouter: Router = (() => {
 		request: {
 			body: {
 				content: {
-					'application/json': { schema: CreateReactionSchema.shape.body },
+					'application/json': {
+						schema: CreateReactionSchema.shape.body,
+					},
 				},
 			},
 		},
 		responses: createApiResponse(messageResponse, 'Success'),
 	});
 
-	router.delete('/delete', validateRequest(DeleteReactionSchema), reactionsController.delete);
+	router.delete(
+		'/delete',
+		validateRequest(DeleteReactionSchema),
+		reactionsController.delete
+	);
 
 	return router;
 })();
