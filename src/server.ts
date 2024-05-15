@@ -19,6 +19,7 @@ import { filesRouter } from './api/files/filesRoutes';
 import { messagesRouter } from './api/messages/messageRouter';
 import { notificationRouter } from './api/notifications/notificationsRoutes';
 import { reactionsRouter } from './api/reactions/reactionsRouter';
+import trxLoader from './common/middleware/trxHandler';
 import { connectSocket } from './sockets/socket';
 
 const logger = pino({ name: 'server start' });
@@ -27,19 +28,14 @@ const httpServer = createServer(app);
 
 connectSocket(httpServer);
 
-// Set the application to trust the reverse proxy
-app.set('trust proxy', true);
-
-// Middlewares
 app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
 app.use(express.json());
 app.use(helmet());
 app.use(rateLimiter);
 
-// Request logging
 app.use(requestLogger());
 
-// Routes
+app.use(trxLoader);
 app.use('/health-check', healthCheckRouter);
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
@@ -50,10 +46,7 @@ app.use('/reactions', reactionsRouter);
 app.use('/files', filesRouter);
 app.use('/notifications', notificationRouter);
 
-// Swagger UI
 app.use(openAPIRouter);
-
-// Error handlers
 app.use(errorHandler());
 
 export { httpServer as app, logger };

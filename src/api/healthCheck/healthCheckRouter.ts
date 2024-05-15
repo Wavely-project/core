@@ -4,7 +4,6 @@ import { StatusCodes } from 'http-status-codes';
 import { z } from 'zod';
 
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
-import { ResponseStatus, ServiceResponse } from '@/common/models/serviceResponse';
 import { handleServiceResponse } from '@/common/utils/httpHandlers';
 
 export const healthCheckRegistry = new OpenAPIRegistry();
@@ -20,8 +19,7 @@ export const healthCheckRouter: Router = (() => {
 	});
 
 	router.get('/', (_req: Request, res: Response) => {
-		const serviceResponse = new ServiceResponse(ResponseStatus.Success, 'Service is healthy', null, StatusCodes.OK);
-		handleServiceResponse(serviceResponse, res);
+		handleServiceResponse(res, {}, 'Service is good', StatusCodes.OK);
 	});
 
 	return router;

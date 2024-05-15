@@ -24,7 +24,11 @@ export const notificationRouter: Router = (() => {
 		responses: createApiResponse(notificationSchema, 'Success'),
 	});
 
-	router.get('/:id', validateRequest(notificationIdSchema), notificationsController.create);
+	router.get(
+		'/:id',
+		validateRequest(notificationIdSchema),
+		notificationsController.create
+	);
 
 	notificationsRegistry.registerPath({
 		method: 'patch',
@@ -34,7 +38,11 @@ export const notificationRouter: Router = (() => {
 		responses: createApiResponse(notificationSchema, 'Success'),
 	});
 
-	router.patch('/:id/read', validateRequest(notificationIdSchema), notificationsController.markAsRead);
+	router.patch(
+		'/:id/read',
+		validateRequest(notificationIdSchema),
+		notificationsController.markAsRead
+	);
 
 	notificationsRegistry.registerPath({
 		method: 'patch',
@@ -44,7 +52,11 @@ export const notificationRouter: Router = (() => {
 		responses: createApiResponse(notificationSchema, 'Success'),
 	});
 
-	router.patch('/:id/unread', validateRequest(notificationIdSchema), notificationsController.markAsRead);
+	router.patch(
+		'/:id/unread',
+		validateRequest(notificationIdSchema),
+		notificationsController.markAsRead
+	);
 
 	notificationsRegistry.registerPath({
 		method: 'delete',
@@ -54,7 +66,11 @@ export const notificationRouter: Router = (() => {
 		responses: createApiResponse(messageResponse, 'Success'),
 	});
 
-	router.delete('/', validateRequest(notificationIdSchema), notificationsController.delete);
+	router.delete(
+		'/',
+		validateRequest(notificationIdSchema),
+		notificationsController.delete
+	);
 
 	return router;
 })();

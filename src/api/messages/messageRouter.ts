@@ -17,11 +17,15 @@ import {
 
 export const messageRegistery = new OpenAPIRegistry();
 
-const bearerAuth = messageRegistery.registerComponent('securitySchemes', 'bearerAuth', {
-	type: 'http',
-	scheme: 'bearer',
-	bearerFormat: 'JWT',
-});
+const bearerAuth = messageRegistery.registerComponent(
+	'securitySchemes',
+	'bearerAuth',
+	{
+		type: 'http',
+		scheme: 'bearer',
+		bearerFormat: 'JWT',
+	}
+);
 
 messageRegistery.register('Message', MessageSchema);
 

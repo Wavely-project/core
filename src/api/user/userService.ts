@@ -1,123 +1,64 @@
-import { StatusCodes } from 'http-status-codes';
+import { Knex } from 'knex';
 
-import { CreateUser, CreateUserDto, User } from '@/api/user/userModel';
+import {
+	CreateUser,
+	CreateUserDto,
+	UpdateUserDto,
+	User,
+} from '@/api/user/userModel';
 import { userRepository } from '@/api/user/userRepository';
-import { InternalServiceResponse, ResponseStatus, ServiceResponse } from '@/common/models/serviceResponse';
-import { logger } from '@/server';
 
-export const userService = {
-	createUser: async (user: CreateUser): Promise<InternalServiceResponse<User | null>> => {
-		try {
-			const userPayload: CreateUserDto = {
-				...user,
-				bio: '',
-				avatarUrl: '',
-				status: 'offline',
-			};
-			const newUser = await userRepository.createUser(userPayload);
-			if (!newUser) {
-				return new InternalServiceResponse(ResponseStatus.Failed, null);
-			}
-			return new InternalServiceResponse<User>(ResponseStatus.Success, newUser);
-		} catch (ex) {
-			const errorMessage = `Error creating user: ${(ex as Error).message}`;
-			logger.error(errorMessage);
-			return new InternalServiceResponse(ResponseStatus.Failed, null);
-		}
-	},
+import coworkersService from '../coworkers/coworkersService';
+import workspaceService from '../workspace/workspaceService';
 
-	checkEmailExists: async (email: string): Promise<InternalServiceResponse<boolean>> => {
-		try {
-			const user = await userRepository.findByEmail(email);
-			if (!user) {
-				return new InternalServiceResponse<boolean>(ResponseStatus.Failed, false);
-			}
-			return new InternalServiceResponse<boolean>(ResponseStatus.Success, true);
-		} catch (ex) {
-			const errorMessage = `Error checking if email exists: ${(ex as Error).message}`;
-			logger.error(errorMessage);
-			return new InternalServiceResponse(ResponseStatus.Failed, false);
-		}
+const userService = {
+	createUser: async (
+		user: CreateUser,
+		trx: Knex.Transaction
+	): Promise<User> => {
+		const userPayload: CreateUserDto = {
+			...user,
+			bio: '',
+			avatarUrl: '',
+			status: 'offline',
+		};
+		return userRepository.create(userPayload, trx);
 	},
-
-	usernameExists: async (username: string): Promise<InternalServiceResponse<boolean>> => {
-		try {
-			const user = await userRepository.findByUsername(username);
-			if (!user) {
-				return new InternalServiceResponse<boolean>(ResponseStatus.Failed, false);
-			}
-			return new InternalServiceResponse<boolean>(ResponseStatus.Success, true);
-		} catch (ex) {
-			const errorMessage = `Error checking if username exists: ${(ex as Error).message}`;
-			logger.error(errorMessage);
-			return new InternalServiceResponse(ResponseStatus.Failed, false);
-		}
+	checkEmailExists: async (
+		email: string,
+		trx: Knex.Transaction
+	): Promise<boolean> => {
+		return !!(await userRepository.getByEmail(email, trx));
 	},
-
-	// Retrieves all users from the database
-	findAll: async (): Promise<ServiceResponse<User[] | null>> => {
-		try {
-			const users = await userRepository.findAll();
-			if (!users) {
-				return new ServiceResponse(ResponseStatus.Failed, 'No Users found', null, StatusCodes.NOT_FOUND);
-			}
-			return new ServiceResponse<User[]>(ResponseStatus.Success, 'Users found', users, StatusCodes.OK);
-		} catch (ex) {
-			const errorMessage = `Error finding all users: $${(ex as Error).message}`;
-			logger.error(errorMessage);
-			return new ServiceResponse(ResponseStatus.Failed, errorMessage, null, StatusCodes.INTERNAL_SERVER_ERROR);
-		}
+	usernameExists: async (
+		username: string,
+		trx: Knex.Transaction
+	): Promise<boolean> => {
+		return !!(await userRepository.getByUsername(username, trx));
 	},
-
-	// Retrieves a single user by their ID
-	findById: async (id: number): Promise<ServiceResponse<User | null>> => {
-		try {
-			const user = await userRepository.findById(id);
-			if (!user) {
-				return new ServiceResponse(ResponseStatus.Failed, 'User not found', null, StatusCodes.NOT_FOUND);
-			}
-			return new ServiceResponse<User>(ResponseStatus.Success, 'User found', user, StatusCodes.OK);
-		} catch (ex) {
-			const errorMessage = `Error finding user with id ${id}:, ${(ex as Error).message}`;
-			logger.error(errorMessage);
-			return new ServiceResponse(ResponseStatus.Failed, errorMessage, null, StatusCodes.INTERNAL_SERVER_ERROR);
-		}
+	getById: (id: number, trx: Knex.Transaction): Promise<User | null> => {
+		return userRepository.getById(id, trx);
 	},
-
-	findByEmail: async (email: string): Promise<InternalServiceResponse<User | null>> => {
-		try {
-			const user = await userRepository.findByEmail(email);
-			if (!user) {
-				return new InternalServiceResponse(ResponseStatus.Failed, null);
-			}
-			return new InternalServiceResponse<User>(ResponseStatus.Success, user);
-		} catch (ex) {
-			const errorMessage = `Error finding user with email ${email}: ${(ex as Error).message}`;
-			logger.error(errorMessage);
-			return new InternalServiceResponse(ResponseStatus.Failed, null);
-		}
+	getByEmail: (
+		email: string,
+		trx: Knex.Transaction
+	): Promise<User | null> => {
+		return userRepository.getByEmail(email, trx);
 	},
-	// updateUser: async (id: number, user: UpdateUser): Promise<ServiceResponse<User | null>> => {
-	// 	try {
-	// 		const updatedUser = await userRepository.updateUser(id, user);
-	// 		if (!updatedUser) {
-	// 			return new ServiceResponse(ResponseStatus.Failed, 'User not found', null, StatusCodes.NOT_FOUND);
-	// 		}
-	// 		return new ServiceResponse<User>(ResponseStatus.Success, 'User updated', updatedUser, StatusCodes.OK);
-	// 	} catch (ex) {
-	// 		const errorMessage = `Error updating user with id ${id}: ${(ex as Error).message}`;
-	// 		logger.error(errorMessage);
-	// 		return new ServiceResponse(ResponseStatus.Failed, errorMessage, null, StatusCodes.INTERNAL_SERVER_ERROR);
-	// 	}
-	// },
-	// deleteUser: async (id: number): Promise<ServiceResponse<User | null>> => {
-	// 	try {
-	// 		await userRepository.deleteUser(id);
-	// 		return new ServiceResponse<User>(ResponseStatus.Success, 'User deleted', null, StatusCodes.OK);
-	// 	} catch (ex) {
-	// 		const errorMessage = `Error deleting user with id ${id}: ${(ex as Error).message}`;
-	// 		logger.error(errorMessage);
-	// 		return new ServiceResponse(ResponseStatus.Failed, errorMessage, null, StatusCodes.INTERNAL_SERVER_ERROR);
-	// 	}
-	// },
+	getWorkspaces: async (userId: number, trx: Knex.Transaction) => {
+		const ids = await coworkersService.getUserWorkspaces(userId, trx);
+		return workspaceService.getByIds(ids, trx);
+	},
+	updateUser: (
+		userId: number,
+		user: UpdateUserDto,
+		trx: Knex.Transaction
+	): Promise<User | null> => {
+		return userRepository.update(userId, user, trx);
+	},
+	deleteUser: (userId: number, trx: Knex.Transaction): Promise<number> => {
+		return userRepository.delete(userId, trx);
+	},
 };
+
+export default userService;

@@ -58,4 +58,10 @@ export const GetThreadSchema = z.object({
 	params: z.object({ id: z.number() }),
 });
 
+export type deleteMessageData = {
+	id: number;
+	channelId: number;
+	workspaceId: number;
+};
+
 export const Messages = z.array(MessageSchema);

@@ -4,8 +4,14 @@ import threadsRepository from '../threadsRepository';
 describe('threadsRepository', () => {
 	const trx: any = mockedTxn;
 	test('createThread', async () => {
-		await threadsRepository.createThread(trx, { participantId: 3, parentMessageId: 3 });
-		expect(trx.insert).toBeCalledWith({ participantId: 3, parentMessageId: 3 });
+		await threadsRepository.createThread(trx, {
+			participantId: 3,
+			parentMessageId: 3,
+		});
+		expect(trx.insert).toBeCalledWith({
+			participantId: 3,
+			parentMessageId: 3,
+		});
 		expect(trx.into).toBeCalledWith('threads');
 	});
 

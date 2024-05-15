@@ -1,9 +1,16 @@
 import { Channel, CreateChannelDto } from '@/api/channels/channelModel';
 
 export const channelRepository = {
-	createChannel: async (trx: any, channel: CreateChannelDto): Promise<Channel> => {
+	createChannel: async (
+		trx: any,
+		channel: CreateChannelDto
+	): Promise<Channel> => {
 		const ids = await trx.insert(channel).into('channels');
-		const newChannel = await trx.select('*').from('channels').where('id', ids[0]).first();
+		const newChannel = await trx
+			.select('*')
+			.from('channels')
+			.where('id', ids[0])
+			.first();
 		return newChannel;
 	},
 	getWorkspaceChannels: async (trx: any, id: number): Promise<Channel[]> => {

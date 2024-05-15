@@ -21,11 +21,15 @@ import ChannelController from './channelController';
 
 export const channelRegistery = new OpenAPIRegistry();
 
-const bearerAuth = channelRegistery.registerComponent('securitySchemes', 'bearerAuth', {
-	type: 'http',
-	scheme: 'bearer',
-	bearerFormat: 'JWT',
-});
+const bearerAuth = channelRegistery.registerComponent(
+	'securitySchemes',
+	'bearerAuth',
+	{
+		type: 'http',
+		scheme: 'bearer',
+		bearerFormat: 'JWT',
+	}
+);
 
 channelRegistery.register('Channel', ChannelSchema);
 
@@ -135,7 +139,10 @@ export const channelRouter: Router = (() => {
 		path: '/channels/{id}/messages',
 		tags: ['Channel'],
 		security: [{ bearerAuth: [] }],
-		request: { params: GetChannelSchema.shape.params, query: GetChannelSchema.shape.query },
+		request: {
+			params: GetChannelSchema.shape.params,
+			query: GetChannelSchema.shape.query,
+		},
 		responses: createApiResponse(Messages, 'Success'),
 	});
 

@@ -35,6 +35,7 @@ export const GetUserSchema = z.object({
 });
 
 export const UpdateUserSchema = z.object({
+	params: z.object({ id: commonValidations.id }),
 	body: z.object({
 		name: z.string(),
 		email: z.string(),

@@ -16,12 +16,61 @@ export async function seed(knex: Knex): Promise<void> {
 	 * */
 
 	await Promise.all([
-		EntityFactory.createChannel(1, 1, 1, 'channel 1', 'Descrcription', 'public'),
-		EntityFactory.createChannel(2, 1, 1, 'channel 2', 'Descrcription', 'public'),
-		EntityFactory.createChannel(3, 1, 2, 'channel 3', 'Descrcription', 'public'),
-		EntityFactory.createChannel(4, 2, 3, 'channel 4', 'Descrcription', 'public'),
-		EntityFactory.createChannel(5, 3, 4, 'channel 5', 'Descrcription', 'public'),
-		EntityFactory.createChannel(6, 3, 4, 'channel 6', 'Descrcription', 'public'),
-		EntityFactory.createChannel(7, 5, 5, 'channel 7', 'Descrcription', 'public'),
+		EntityFactory.createChannel(
+			1,
+			1,
+			1,
+			'channel 1',
+			'Descrcription',
+			'public'
+		),
+		EntityFactory.createChannel(
+			2,
+			1,
+			1,
+			'channel 2',
+			'Descrcription',
+			'public'
+		),
+		EntityFactory.createChannel(
+			3,
+			1,
+			2,
+			'channel 3',
+			'Descrcription',
+			'public'
+		),
+		EntityFactory.createChannel(
+			4,
+			2,
+			3,
+			'channel 4',
+			'Descrcription',
+			'public'
+		),
+		EntityFactory.createChannel(
+			5,
+			3,
+			4,
+			'channel 5',
+			'Descrcription',
+			'public'
+		),
+		EntityFactory.createChannel(
+			6,
+			3,
+			4,
+			'channel 6',
+			'Descrcription',
+			'public'
+		),
+		EntityFactory.createChannel(
+			7,
+			5,
+			5,
+			'channel 7',
+			'Descrcription',
+			'public'
+		),
 	]);
 }

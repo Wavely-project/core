@@ -15,18 +15,18 @@ describe('workspaceRepository', () => {
 			description: 'description',
 			avatarUrl: 'url',
 		};
-		await workspaceRepository.createWorkspace(trx, workspaceData);
+		await workspaceRepository.create(workspaceData, trx);
 		expect(trx.insert).toBeCalledWith(workspaceData);
 		expect(trx.into).toBeCalledWith('workspaces');
 	});
 
 	test('getAllUserWorkspaces', async () => {
-		await workspaceRepository.findAllUserWorkspaces(trx, 1);
+		await workspaceRepository.getByIds([1], trx);
 		expect(trx.from).toBeCalledWith('workspaces');
-		expect(trx.where).toBeCalledWith('ownerId', 1);
+		expect(trx.whereIn).toBeCalledWith('id', [1]);
 	});
 	test('deleteWorkspace', async () => {
-		await workspaceRepository.deleteWorkspace(trx, 4);
+		await workspaceRepository.delete(4, trx);
 		expect(trx.where).toBeCalledWith('id', 4);
 	});
 });

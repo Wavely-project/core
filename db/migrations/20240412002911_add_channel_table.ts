@@ -26,10 +26,18 @@ export async function up(knex: Knex): Promise<void> {
 		table.integer('creatorId').unsigned();
 		table.integer('workspaceId').unsigned();
 
-		//TODO: add this to another migrationFile
 		table.foreign('creatorId').references('id').inTable('users');
 		table.foreign('workspaceId').references('id').inTable('workspaces');
-		table.timestamps(true, true, true);
+		table
+			.dateTime('createdAt')
+			.notNullable()
+			.defaultTo(knex.raw('CURRENT_TIMESTAMP'));
+		table
+			.dateTime('updatedAt')
+			.notNullable()
+			.defaultTo(
+				knex.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+			);
 	});
 }
 

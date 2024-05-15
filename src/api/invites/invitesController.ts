@@ -16,7 +16,10 @@ const InvitesController = {
 			expiresAt: new Date(Date.now() + 200 * 60 * 60 * 1000),
 		};
 
-		const invite = await invitesRepository.createInvite(db, createInvitePayload);
+		const invite = await invitesRepository.createInvite(
+			db,
+			createInvitePayload
+		);
 		res.json(invite);
 	},
 	getInviteById: async (req: Request, res: Response) => {
@@ -27,7 +30,10 @@ const InvitesController = {
 
 	getWorkspaceInvites: async (req: Request, res: Response) => {
 		const workspaceId = req.params.id;
-		const invites = await invitesRepository.getInviteByWorkspaceId(db, workspaceId);
+		const invites = await invitesRepository.getInviteByWorkspaceId(
+			db,
+			workspaceId
+		);
 		res.json(invites);
 	},
 	acceptInvite: async (req: Request, res: Response) => {

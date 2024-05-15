@@ -8,7 +8,8 @@ const MessageController = {
 		const channelId = parseInt(req.params.id);
 		const { cursor, limit } = req.query;
 		console.log(cursor, ' ', limit);
-		const messages = await messageRepository.getAllChannelMessages(channelId);
+		const messages =
+			await messageRepository.getAllChannelMessages(channelId);
 		res.json(messages);
 	},
 	getMessageById: async (req: Request, res: Response) => {

@@ -6,3 +6,9 @@ declare global {
 	// eslint-disable-next-line no-var
 	var io: Server<C2S, S2C, ServerEvents, data>;
 }
+
+declare module 'express' {
+	export interface Response {
+		trx?: Transaction;
+	}
+}

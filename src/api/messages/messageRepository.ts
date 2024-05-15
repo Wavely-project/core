@@ -12,12 +12,25 @@ export const messageRepository = {
 		return await db('messages').where('id', id).first();
 	},
 	getAllChannelMessages: async (channelId: number): Promise<Message[]> => {
-		return await db.select('*').from('messages').where('channelId', channelId);
+		return await db
+			.select('*')
+			.from('messages')
+			.where('channelId', channelId);
 	},
-	getAllUserMessages: async (userId: number, channelId: number): Promise<Message[]> => {
-		return await db.select('*').from('messages').where('userId', userId).where('channelId', channelId);
+	getAllUserMessages: async (
+		userId: number,
+		channelId: number
+	): Promise<Message[]> => {
+		return await db
+			.select('*')
+			.from('messages')
+			.where('userId', userId)
+			.where('channelId', channelId);
 	},
-	editMessage: async (id: number, message: CreateMessageDto): Promise<Message> => {
+	editMessage: async (
+		id: number,
+		message: CreateMessageDto
+	): Promise<Message> => {
 		await db('messages').where('id', id).update(message);
 		const updatedMessage = await db('messages').where('id', id).first();
 		return updatedMessage;

@@ -28,7 +28,10 @@ describe('notificationRepository', () => {
 	});
 
 	test('getUnreadNotificationsByRecipientId', async () => {
-		await notificationsRepository.getUnreadNotificationsByRecipientId(trx, 1);
+		await notificationsRepository.getUnreadNotificationsByRecipientId(
+			trx,
+			1
+		);
 		expect(trx.select).toBeCalledWith('*');
 		expect(trx.from).toBeCalledWith('notifications');
 		expect(trx.where).toBeCalledWith('recipientId', 1);

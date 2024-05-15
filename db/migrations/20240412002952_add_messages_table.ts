@@ -29,8 +29,16 @@ export async function up(knex: Knex): Promise<void> {
 		table.foreign('senderId').references('id').inTable('users');
 		table.foreign('channelId').references('id').inTable('channels');
 		table.foreign('parentMessageId').references('id').inTable('messages');
-
-		table.timestamps(true, true, true);
+		table
+			.dateTime('createdAt')
+			.notNullable()
+			.defaultTo(knex.raw('CURRENT_TIMESTAMP'));
+		table
+			.dateTime('updatedAt')
+			.notNullable()
+			.defaultTo(
+				knex.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+			);
 	});
 }
 

@@ -11,7 +11,12 @@ export class ServiceResponse<T = null> {
 	responseObject: T | null;
 	statusCode: number;
 
-	constructor(status: ResponseStatus, message: string, responseObject: T | null, statusCode: number) {
+	constructor(
+		status: ResponseStatus,
+		message: string,
+		responseObject: T | null,
+		statusCode: number
+	) {
 		this.success = status === ResponseStatus.Success;
 		this.message = message;
 		this.responseObject = responseObject;

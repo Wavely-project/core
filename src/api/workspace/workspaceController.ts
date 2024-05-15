@@ -3,10 +3,6 @@ import { Request, Response } from 'express';
 import { CreateWorkspace } from './workspaceModel';
 
 const WorkspaceController = {
-	getWorkspaces: async (req: Request, res: Response) => {
-		const ownerId = res.locals.user.id;
-		res.json({ ownerId });
-	},
 	getWorkspaceById: async (req: Request, res: Response) => {
 		const id = parseInt(req.params.id);
 		res.json({ id });
