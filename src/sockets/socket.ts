@@ -2,8 +2,6 @@ import { authorize } from '@thream/socketio-jwt';
 import { Server as HttpServer } from 'http';
 import { Server } from 'socket.io';
 
-import { User } from '../api/user/userModel';
-import { userService } from '../api/user/userService';
 import { env } from '../common/utils/envConfig';
 import roomsEvents from './roomsEvents';
 import {
@@ -29,11 +27,12 @@ export function connectSocket(server: HttpServer) {
 		io.use(
 			authorize({
 				secret: env.JWT_SECRET,
-				onAuthentication: async (user: User) => {
-					const res = await userService.findById(user.id);
-					if (!res) throw new Error('User not found');
-					return res.responseObject;
-				},
+				//TODO: mmmm, need a trx??
+				// onAuthentication: async (reqUser: User) => {
+				// 	const user = await userService.getById(reqUser.id);
+				// 	if (!user) throw new Error('User not found');
+				// 	return user;
+				// },
 			})
 		);
 	}
