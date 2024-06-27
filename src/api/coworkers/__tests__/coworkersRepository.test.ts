@@ -25,7 +25,7 @@ describe('coworkerRepository', () => {
 	});
 
 	test('getAllWorkspaceUsers', async () => {
-		await coworkerRepository.getUserIds(3, trx);
+		await coworkerRepository.getUsersIds(3, 0, 10, trx);
 		expect(trx.from).toBeCalledWith('coworkers');
 		expect(trx.where).toBeCalledWith('workspaceId', 3);
 	});

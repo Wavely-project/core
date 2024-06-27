@@ -14,14 +14,23 @@ coworkers.workspace_id < workspace.id
 
 export async function up(knex: Knex): Promise<void> {
 	return knex.schema.createTable('coworkers', (table) => {
+		table.increments('id').primary();
 		table.integer('userId').unsigned();
 		table.integer('workspaceId').unsigned();
 		table.timestamp('createdAt').defaultTo(knex.fn.now());
 
 		table.primary(['userId', 'workspaceId']);
 
-		table.foreign('userId').references('id').inTable('users');
-		table.foreign('workspaceId').references('id').inTable('workspaces');
+		table
+			.foreign('userId')
+			.references('id')
+			.inTable('users')
+			.onDelete('CASCADE');
+		table
+			.foreign('workspaceId')
+			.references('id')
+			.inTable('workspaces')
+			.onDelete('CASCADE');
 	});
 }
 

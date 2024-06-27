@@ -16,14 +16,18 @@ export const coworkerRepository = {
 	): Promise<Coworker[]> => {
 		return trx.select('*').from('coworkers').where('userId', userId);
 	},
-	getUserIds: (
+	getUsersIds: (
 		workspaceId: number,
+		cursor: number,
+		limit: number,
 		trx: Knex.Transaction
 	): Promise<Coworker[]> => {
 		return trx
 			.select('*')
 			.from('coworkers')
-			.where('workspaceId', workspaceId);
+			.where('workspaceId', workspaceId)
+			.andWhere('id', '>', cursor)
+			.limit(limit);
 	},
 	removeCoworker: (
 		userId: number,

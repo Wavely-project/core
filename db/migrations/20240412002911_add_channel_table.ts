@@ -26,8 +26,16 @@ export async function up(knex: Knex): Promise<void> {
 		table.integer('creatorId').unsigned();
 		table.integer('workspaceId').unsigned();
 
-		table.foreign('creatorId').references('id').inTable('users');
-		table.foreign('workspaceId').references('id').inTable('workspaces');
+		table
+			.foreign('creatorId')
+			.references('id')
+			.inTable('users')
+			.onDelete('CASCADE');
+		table
+			.foreign('workspaceId')
+			.references('id')
+			.inTable('workspaces')
+			.onDelete('CASCADE');
 		table
 			.dateTime('createdAt')
 			.notNullable()

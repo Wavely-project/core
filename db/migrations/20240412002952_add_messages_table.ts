@@ -26,9 +26,22 @@ export async function up(knex: Knex): Promise<void> {
 		table.integer('channelId').unsigned();
 		table.integer('parentMessageId').unsigned();
 
-		table.foreign('senderId').references('id').inTable('users');
-		table.foreign('channelId').references('id').inTable('channels');
-		table.foreign('parentMessageId').references('id').inTable('messages');
+		table
+			.foreign('senderId')
+			.references('id')
+			.inTable('users')
+			.onDelete('CASCADE');
+		table
+			.foreign('channelId')
+			.references('id')
+			.inTable('channels')
+			.onDelete('CASCADE');
+		table
+			.foreign('parentMessageId')
+			.references('id')
+			.inTable('messages')
+			.onDelete('CASCADE');
+
 		table
 			.dateTime('createdAt')
 			.notNullable()

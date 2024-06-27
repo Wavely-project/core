@@ -1,41 +1,61 @@
-import { CreateMessageDto, Message } from '@/api/messages/messageModel';
+import { Knex } from 'knex';
 
-import db from '../../../db/db';
+import {
+	CreateMessage,
+	Message,
+	UpdateMessage,
+} from '@/api/messages/messageModel';
 
 export const messageRepository = {
-	sendMessage: async (message: CreateMessageDto): Promise<Message> => {
-		const ids = await db('messages').insert(message);
-		const newMessage = await db('messages').where('id', ids[0]).first();
-		return newMessage;
+	sendMessage: async (
+		message: CreateMessage,
+		trx: Knex.Transaction
+	): Promise<Message> => {
+		const ids = await trx.insert(message).into('messages');
+		return trx.select('*').from('messages').where('id', ids[0]).first();
 	},
-	getMessageById: async (id: number): Promise<Message> => {
-		return await db('messages').where('id', id).first();
+
+	getMessageById: (id: number, trx: Knex.Transaction): Promise<Message> => {
+		return trx.select('*').from('messages').where('id', id).first();
 	},
-	getAllChannelMessages: async (channelId: number): Promise<Message[]> => {
-		return await db
+
+	getChannelMessages: (
+		channelId: number,
+		cursor: number,
+		limit: number,
+		trx: Knex.Transaction
+	): Promise<Message[]> => {
+		return trx
 			.select('*')
 			.from('messages')
-			.where('channelId', channelId);
+			.where('channelId', channelId)
+			.andWhere('id', '>', cursor)
+			.limit(limit);
 	},
-	getAllUserMessages: async (
+
+	getAllUserMessages: (
+		//TODO: do we need this?
 		userId: number,
-		channelId: number
+		channelId: number,
+		trx: Knex.Transaction
 	): Promise<Message[]> => {
-		return await db
+		return trx
 			.select('*')
 			.from('messages')
 			.where('userId', userId)
 			.where('channelId', channelId);
 	},
+
 	editMessage: async (
-		id: number,
-		message: CreateMessageDto
+		messageId: number,
+		message: UpdateMessage,
+		trx: Knex.Transaction
 	): Promise<Message> => {
-		await db('messages').where('id', id).update(message);
-		const updatedMessage = await db('messages').where('id', id).first();
-		return updatedMessage;
+		await trx.update(message).where('id', messageId).from('messages');
+		return trx.select('*').from('messages').where('id', messageId).first();
 	},
-	deleteMessage: async (id: number): Promise<void> => {
-		await db('messages').where('id', id).delete();
+
+	deleteMessage: (id: number, trx: Knex.Transaction) => {
+		return trx.delete().from('messages').where('id', id);
 	},
 };

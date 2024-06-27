@@ -45,6 +45,7 @@ export const UpdateChannelSchema = z.object({
 	}),
 	params: z.object({ id: commonValidations.id }),
 });
+export type updateChannelDto = z.infer<typeof UpdateChannelSchema.shape.body>;
 export const DeleteChannelSchema = z.object({
 	params: z.object({ id: commonValidations.id }),
 });
@@ -55,3 +56,8 @@ export type DeleteChannelData = Omit<
 	Channel,
 	'createdAt' | 'updatedAt' | 'name' | 'description' | 'type' | 'creatorId'
 >;
+
+export const WorkspaceChannelsView = ChannelSchema.omit({
+	createdAt: true,
+	updatedAt: true,
+});

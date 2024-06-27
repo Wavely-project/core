@@ -47,3 +47,12 @@ export const UpdateUserSchema = z.object({
 export const Users = z.array(UserSchema);
 export type UpdateUserDto = z.infer<typeof UpdateUserSchema.shape.body>;
 export const DeleteUserSchema = GetUserSchema;
+
+export const WorkspaceUsersView = UserSchema.omit({
+	password: true,
+	createdAt: true,
+	updatedAt: true,
+	email: true,
+});
+
+export const ChannelUsersView = WorkspaceUsersView;

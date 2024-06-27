@@ -1,5 +1,6 @@
 import {
 	ErrorRequestHandler,
+	NextFunction,
 	Request,
 	RequestHandler,
 	Response,
@@ -28,7 +29,8 @@ const unexpectedRequest: RequestHandler = (_req, res) => {
 const addErrorToRequestLog: ErrorRequestHandler = (
 	err,
 	_req: Request,
-	res: Response
+	res: Response,
+	next: NextFunction
 ) => {
 	res.trx.rollback();
 	if (err instanceof CustomError) {
@@ -48,6 +50,7 @@ const addErrorToRequestLog: ErrorRequestHandler = (
 		},
 		StatusCodes.INTERNAL_SERVER_ERROR
 	);
+	next(err);
 };
 
 export default () => [unexpectedRequest, addErrorToRequestLog];

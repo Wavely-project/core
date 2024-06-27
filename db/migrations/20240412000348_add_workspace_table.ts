@@ -7,7 +7,11 @@ export async function up(knex: Knex): Promise<void> {
 		table.string('description');
 		table.string('avatarUrl');
 		table.integer('ownerId').unsigned();
-		table.foreign('ownerId').references('id').inTable('users');
+		table
+			.foreign('ownerId')
+			.references('id')
+			.inTable('users')
+			.onDelete('CASCADE');
 
 		table
 			.dateTime('createdAt')

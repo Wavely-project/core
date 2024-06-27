@@ -4,10 +4,13 @@ import threadsRepository from '../threadsRepository';
 describe('threadsRepository', () => {
 	const trx: any = mockedTxn;
 	test('createThread', async () => {
-		await threadsRepository.createThread(trx, {
-			participantId: 3,
-			parentMessageId: 3,
-		});
+		await threadsRepository.createThread(
+			{
+				participantId: 3,
+				parentMessageId: 3,
+			},
+			trx
+		);
 		expect(trx.insert).toBeCalledWith({
 			participantId: 3,
 			parentMessageId: 3,
@@ -16,14 +19,14 @@ describe('threadsRepository', () => {
 	});
 
 	test('getUserThreads', async () => {
-		await threadsRepository.getUserThreads(trx, 2);
+		await threadsRepository.getWorkspaceThreads(2, trx);
 		expect(trx.select).toBeCalledWith('*');
 		expect(trx.from).toBeCalledWith('threads');
 		expect(trx.where).toBeCalledWith('participantId', 2);
 	});
 
 	test('deleteThread', async () => {
-		await threadsRepository.deleteThread(trx, 1, 1);
+		await threadsRepository.deleteThread(1, 1, trx);
 		expect(trx.delete).toBeCalled();
 		expect(trx.from).toBeCalledWith('threads');
 	});

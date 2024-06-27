@@ -12,12 +12,19 @@ import type { Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
 	await knex.schema.createTable('threads', (table) => {
+		table.increments('id').primary();
 		table.integer('participantId').unsigned();
 		table.integer('parentMessageId').unsigned();
 		table.primary(['participantId', 'parentMessageId']);
 
-		table.foreign('participantId').references('users.id');
-		table.foreign('parentMessageId').references('messages.id');
+		table
+			.foreign('participantId')
+			.references('users.id')
+			.onDelete('CASCADE');
+		table
+			.foreign('parentMessageId')
+			.references('messages.id')
+			.onDelete('CASCADE');
 	});
 }
 

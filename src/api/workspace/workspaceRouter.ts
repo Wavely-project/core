@@ -65,14 +65,12 @@ export const workspaceRouter: Router = (() => {
 		ChannelController.getWorkspaceChannels
 	);
 
-	router.get(
-		'/:id/threads',
-		[
-			AuthController.authenticate,
-			validateRequest(Schemas.GetWorkspaceSchema),
-		],
-		ChannelController.getWorkspaceThreads
-	);
+	// TODO:
+	router.get('/:id/threads', [
+		AuthController.authenticate,
+		validateRequest(Schemas.GetWorkspaceSchema),
+		//TOOD: add handler.
+	]);
 
 	return router;
 })();

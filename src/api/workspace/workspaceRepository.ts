@@ -14,15 +14,17 @@ export const workspaceRepository = {
 		const ids = await trx.insert(workspace).into('workspaces');
 		return trx.select('*').from('workspaces').where('id', ids[0]).first();
 	},
-	update: (
+	update: async (
 		workspaceId: number,
 		workspace: UpdateWorkspace,
 		trx: Knex.Transaction
 	): Promise<Workspace> => {
+		await trx.update(workspace).where('id', workspaceId).from('workspaces');
 		return trx
-			.update(workspace)
+			.select('*')
+			.from('workspaces')
 			.where('id', workspaceId)
-			.from('workspaces');
+			.first();
 	},
 	getByIds: (
 		workspaceIds: number[],

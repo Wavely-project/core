@@ -22,7 +22,7 @@ export const CreateFileSchema = z.object({
 	body: BaseFileSchema,
 });
 
-export type CreateFileDto = z.infer<typeof CreateFileSchema>;
+export type CreateFileDto = z.infer<typeof CreateFileSchema.shape.body>;
 
 export const GetFileSchema = z.object({
 	params: z.object({ id: commonValidations.id }),

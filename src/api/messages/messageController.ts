@@ -1,22 +1,36 @@
 import { Request, Response } from 'express';
 
+import {
+	asyncHandler,
+	handleServiceResponse,
+} from '@/common/utils/httpHandlers';
+
 import { CreateMessage } from './messageModel';
-import { messageRepository } from './messageRepository';
+import * as messageService from './messageService';
 
 const MessageController = {
-	getChannelMessages: async (req: Request, res: Response) => {
+	getChannelMessages: asyncHandler(async (req: Request, res: Response) => {
 		const channelId = parseInt(req.params.id);
-		const { cursor, limit } = req.query;
-		console.log(cursor, ' ', limit);
-		const messages =
-			await messageRepository.getAllChannelMessages(channelId);
-		res.json(messages);
-	},
-	getMessageById: async (req: Request, res: Response) => {
+		const cursor = parseInt((req.query.cursor || '0').toString());
+		const limit = parseInt((req.query.limit || '10').toString());
+
+		const messages = await messageService.getChannelMessages(
+			channelId,
+			cursor,
+			limit,
+			res.trx
+		);
+
+		handleServiceResponse(res, messages, 'ok');
+	}),
+
+	getMessageById: asyncHandler(async (req: Request, res: Response) => {
 		const id = parseInt(req.params.id);
-		res.json({ id });
-	},
-	sendMessage: async (req: Request, res: Response) => {
+		const message = await messageService.getMessageById(id, res.trx);
+		handleServiceResponse(res, message, 'ok');
+	}),
+
+	sendMessage: asyncHandler(async (req: Request, res: Response) => {
 		const { content, channelId, parentMessageId } = req.body;
 
 		const createMessagePayload: CreateMessage = {
@@ -25,21 +39,35 @@ const MessageController = {
 			senderId: res.locals.user.id,
 			parentMessageId,
 		};
-		res.json(createMessagePayload);
-	},
-	updateMessage: async (req: Request, res: Response) => {
+
+		const message = await messageService.sendMessage(
+			createMessagePayload,
+			res.trx
+		);
+		// TODO: call service to distripute message??
+
+		handleServiceResponse(res, message, 'ok');
+	}),
+
+	editMessage: asyncHandler(async (req: Request, res: Response) => {
 		const id = parseInt(req.params.id);
-		const { content } = req.body;
-		res.json({ id, content });
-	},
-	deleteMessage: async (req: Request, res: Response) => {
+
+		// TODO: call service to update message??
+		const message = await messageService.editMessage(id, req.body, res.trx);
+		handleServiceResponse(res, message, 'ok');
+	}),
+
+	deleteMessage: asyncHandler(async (req: Request, res: Response) => {
 		const id = parseInt(req.params.id);
-		res.json({ id });
-	},
-	getChannelThreads: async (req: Request, res: Response) => {
+		// TODO: call service to delete message??
+		await messageService.deleteMessage(id, res.trx);
+		handleServiceResponse(res, null, 'ok');
+	}),
+
+	getChannelThreads: asyncHandler(async (req: Request, res: Response) => {
 		const channelId = parseInt(req.params.id);
 		res.json({ channelId });
-	},
+	}),
 };
 
 export default MessageController;

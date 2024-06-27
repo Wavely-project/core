@@ -39,6 +39,9 @@ const userService = {
 	getById: (id: number, trx: Knex.Transaction): Promise<User | null> => {
 		return userRepository.getById(id, trx);
 	},
+	getByIds: (ids: number[], trx: Knex.Transaction): Promise<User[]> => {
+		return userRepository.getByIds(ids, trx);
+	},
 	getByEmail: (
 		email: string,
 		trx: Knex.Transaction

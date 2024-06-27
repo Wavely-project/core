@@ -1,25 +1,44 @@
-import { Channel, CreateChannelDto } from '@/api/channels/channelModel';
+import { Knex } from 'knex';
+
+import {
+	Channel,
+	CreateChannelDto,
+	updateChannelDto,
+} from '@/api/channels/channelModel';
 
 export const channelRepository = {
-	createChannel: async (
-		trx: any,
-		channel: CreateChannelDto
+	create: async (
+		channel: CreateChannelDto,
+		trx: Knex.Transaction
 	): Promise<Channel> => {
 		const ids = await trx.insert(channel).into('channels');
-		const newChannel = await trx
+		return trx.select('*').from('channels').where('id', ids[0]).first();
+	},
+	update: async (
+		channelId: number,
+		channel: updateChannelDto,
+		trx: Knex.Transaction
+	): Promise<Channel> => {
+		await trx.update(channel).where('id', channelId).from('channels');
+		return trx.select('*').from('channels').where('id', channelId).first();
+	},
+	getWorkspaceChannels: (
+		workspaceId: number,
+		cursor: number,
+		limit: number,
+		trx: Knex.Transaction
+	): Promise<Channel[]> => {
+		return trx
 			.select('*')
 			.from('channels')
-			.where('id', ids[0])
-			.first();
-		return newChannel;
+			.where('workspaceId', workspaceId)
+			.andWhere('id', '>', cursor)
+			.limit(limit);
 	},
-	getWorkspaceChannels: async (trx: any, id: number): Promise<Channel[]> => {
-		return await trx.select('*').from('channels').where('workspaceId', id);
+	getById: (id: number, trx: Knex.Transaction): Promise<Channel | null> => {
+		return trx.select('*').from('channels').where('id', id).first();
 	},
-	getById: async (trx: any, id: number): Promise<Channel | null> => {
-		return await trx.select('*').from('channels').where('id', id).first();
-	},
-	deleteChannel: async (trx: any, id: number): Promise<void> => {
-		return await trx.delete().from('channels').where('id', id);
+	delete: (id: number, trx: Knex.Transaction) => {
+		return trx.delete().from('channels').where('id', id);
 	},
 };

@@ -1,32 +1,56 @@
 import { Request, Response } from 'express';
 
-import { CreateWorkspace } from './workspaceModel';
+import {
+	asyncHandler,
+	handleServiceResponse,
+} from '@/common/utils/httpHandlers';
+
+import { CreateWorkspace, UpdateWorkspace } from './workspaceModel';
+import workspaceService from './workspaceService';
 
 const WorkspaceController = {
-	getWorkspaceById: async (req: Request, res: Response) => {
+	getWorkspaceById: asyncHandler(async (req: Request, res: Response) => {
 		const id = parseInt(req.params.id);
-		res.json({ id });
-	},
-	createWorkspace: async (req: Request, res: Response) => {
+		const workspace = await workspaceService.getById(id, res.trx);
+		handleServiceResponse(res, workspace, 'ok');
+	}),
+	createWorkspace: asyncHandler(async (req: Request, res: Response) => {
 		const { name, description, avatarUrl } = req.body;
 		const ownerId = res.locals.user.id;
-		const createUserPayload: CreateWorkspace = {
+		const createWorkspacePayload: CreateWorkspace = {
 			name,
 			description,
 			ownerId,
 			avatarUrl,
 		};
-		res.json(createUserPayload);
-	},
-	updateWorkspace: async (req: Request, res: Response) => {
+		const workspace = await workspaceService.create(
+			createWorkspacePayload,
+			res.trx
+		);
+		handleServiceResponse(res, workspace, 'ok');
+	}),
+	updateWorkspace: asyncHandler(async (req: Request, res: Response) => {
 		const id = parseInt(req.params.id);
 		const { name, description, avatarUrl } = req.body;
-		res.json({ id, name, description, avatarUrl });
-	},
-	deleteWorkspace: async (req: Request, res: Response) => {
+		const updateWorkspacePayload: UpdateWorkspace = {
+			name,
+			description,
+			avatarUrl,
+		};
+		const workspace = await workspaceService.update(
+			id,
+			updateWorkspacePayload,
+			res.trx
+		);
+
+		handleServiceResponse(res, workspace, 'ok');
+	}),
+	deleteWorkspace: asyncHandler(async (req: Request, res: Response) => {
 		const id = parseInt(req.params.id);
-		res.json({ id });
-	},
+		await workspaceService.delete(id, res.trx);
+
+		handleServiceResponse(res, {}, 'ok');
+	}),
 };
 
 export default WorkspaceController;

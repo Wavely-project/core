@@ -13,6 +13,12 @@ export const userRepository = {
 	getById: (id: number, trx: Knex.Transaction): Promise<User | null> => {
 		return trx.select('*').from('users').where('id', id).first();
 	},
+	getByIds: (ids: number[], trx: Knex.Transaction) => {
+		return trx
+			.select('id', 'username', 'bio', 'name', 'avatarUrl', 'status')
+			.from('users')
+			.whereIn('id', ids);
+	},
 	getByEmail: (
 		email: string,
 		trx: Knex.Transaction

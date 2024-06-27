@@ -26,10 +26,19 @@ export async function up(knex: Knex): Promise<void> {
 		table.boolean('isRead').defaultTo(false);
 		table.datetime('createdAt').defaultTo(knex.fn.now());
 
-		table.foreign('recipientId').references('users.id');
-		table.foreign('messageId').references('messages.id');
-		table.foreign('channelId').references('channels.id');
-		table.foreign('workspaceId').references('workspaces.id');
+		table.foreign('recipientId').references('users.id').onDelete('CASCADE');
+		table
+			.foreign('messageId')
+			.references('messages.id')
+			.onDelete('CASCADE');
+		table
+			.foreign('channelId')
+			.references('channels.id')
+			.onDelete('CASCADE');
+		table
+			.foreign('workspaceId')
+			.references('workspaces.id')
+			.onDelete('CASCADE');
 	});
 }
 

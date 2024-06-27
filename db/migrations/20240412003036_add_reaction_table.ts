@@ -18,8 +18,16 @@ export async function up(knex: Knex): Promise<void> {
 		table.integer('messageId').unsigned();
 		table.string('reaction').notNullable();
 
-		table.foreign('userId').references('id').inTable('users');
-		table.foreign('messageId').references('id').inTable('messages');
+		table
+			.foreign('userId')
+			.references('id')
+			.inTable('users')
+			.onDelete('CASCADE');
+		table
+			.foreign('messageId')
+			.references('id')
+			.inTable('messages')
+			.onDelete('CASCADE');
 	});
 }
 

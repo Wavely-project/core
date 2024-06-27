@@ -3,10 +3,10 @@ import {
 	OpenAPIRegistry,
 } from '@asteasolutions/zod-to-openapi';
 
-import { channelRegistery } from '@/api/channels/channelRouter';
+import { channelRegistery } from '@/api/channels/channelApi';
 import { filesRegistry } from '@/api/files/filesRoutes';
 import { healthCheckRegistry } from '@/api/healthCheck/healthCheckRouter';
-import { messageRegistery } from '@/api/messages/messageRouter';
+import { messageRegistery } from '@/api/messages/messageApi';
 import { notificationsRegistry } from '@/api/notifications/notificationsRoutes';
 import { reactionsRegistry } from '@/api/reactions/reactionsRouter';
 import { userRegistry } from '@/api/user/userApi';

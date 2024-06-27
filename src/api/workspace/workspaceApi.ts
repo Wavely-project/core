@@ -2,11 +2,14 @@ import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 
 import * as Schemas from '@/api/workspace/workspaceModel';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
-import { messageResponse } from '@/common/utils/commonResponses';
+import {
+	messageResponse,
+	paginateResponse,
+} from '@/common/utils/commonResponses';
 
-import { Channels } from '../channels/channelModel';
+import { WorkspaceChannelsView } from '../channels/channelModel';
 import { Threads } from '../threads/threadsModel';
-import { Users } from '../user/userModel';
+import { WorkspaceUsersView } from '../user/userModel';
 
 export const workspaceRegistry = new OpenAPIRegistry();
 
@@ -80,8 +83,14 @@ workspaceRegistry.registerPath({
 	path: '/workspaces/{id}/users',
 	tags: ['Workspace'],
 	security: [{ [bearerAuth.name]: [] }],
-	request: { params: Schemas.GetWorkspaceSchema.shape.params },
-	responses: createApiResponse(Users, 'Success'),
+	request: {
+		params: Schemas.GetWorkspaceSchema.shape.params,
+		query: Schemas.GetWorkspaceSchema.shape.query,
+	},
+	responses: createApiResponse(
+		paginateResponse(WorkspaceUsersView),
+		'Success'
+	),
 });
 
 workspaceRegistry.registerPath({
@@ -93,7 +102,10 @@ workspaceRegistry.registerPath({
 		params: Schemas.GetWorkspaceSchema.shape.params,
 		query: Schemas.GetWorkspaceSchema.shape.query,
 	},
-	responses: createApiResponse(Channels, 'Success'),
+	responses: createApiResponse(
+		paginateResponse(WorkspaceChannelsView),
+		'Success'
+	),
 });
 
 workspaceRegistry.registerPath({

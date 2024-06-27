@@ -1,10 +1,11 @@
 import { mockedTxn } from '../../../common/__tests__/mocks';
+import { CreateFileDto } from '../filesModel';
 import filesRepository from '../filesRepository';
 
 describe('filesRepository', () => {
 	const trx: any = mockedTxn;
 	test('createFile', async () => {
-		const fileData = {
+		const fileData: CreateFileDto = {
 			fileName: 'file1',
 			fileSize: 100,
 			fileType: 'image/png',

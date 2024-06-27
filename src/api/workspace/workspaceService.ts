@@ -7,6 +7,9 @@ const workspaceService = {
 	create: (workspaceData: CreateWorkspace, trx: Knex.Transaction) => {
 		return workspaceRepository.create(workspaceData, trx);
 	},
+	getById: (workspaceId: number, trx: Knex.Transaction) => {
+		return workspaceRepository.getById(workspaceId, trx);
+	},
 	getByIds: (workspaceIds: number[], trx: Knex.Transaction) => {
 		return workspaceRepository.getByIds(workspaceIds, trx);
 	},

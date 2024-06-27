@@ -14,14 +14,23 @@ members.channel_id < channels.id
 
 export async function up(knex: Knex): Promise<void> {
 	return knex.schema.createTable('members', (table) => {
+		table.increments('id').primary();
 		table.integer('userId').unsigned();
 		table.integer('channelId').unsigned();
 		table.timestamp('createdAt').defaultTo(knex.fn.now());
 
 		table.primary(['userId', 'channelId']);
 
-		table.foreign('userId').references('id').inTable('users');
-		table.foreign('channelId').references('id').inTable('channels');
+		table
+			.foreign('userId')
+			.references('id')
+			.inTable('users')
+			.onDelete('CASCADE');
+		table
+			.foreign('channelId')
+			.references('id')
+			.inTable('channels')
+			.onDelete('CASCADE');
 	});
 }
 

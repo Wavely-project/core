@@ -2,31 +2,31 @@ import { CreateThreadDto, Thread } from './threadsModel';
 
 const threadsRepository = {
 	createThread: async (
-		trx: any,
-		thread: CreateThreadDto
+		thread: CreateThreadDto,
+		trx: any
 	): Promise<Thread> => {
 		const ids = await trx.insert(thread).into('threads');
-		return await trx
+		return trx
 			.select('*')
 			.from('threads')
 			.where('participantId', ids[0])
 			.first();
 	},
-	getUserThreads: async (
-		trx: any,
-		participantId: number
+	getWorkspaceThreads: (
+		participantId: number,
+		trx: any
 	): Promise<Thread[] | null> => {
-		return await trx
+		return trx
 			.select('*')
 			.from('threads')
 			.where('participantId', participantId);
 	},
-	deleteThread: async (
-		trx: any,
+	deleteThread: (
 		participantId: number,
-		messageId: number
+		messageId: number,
+		trx: any
 	): Promise<void> => {
-		return await trx
+		return trx
 			.delete()
 			.from('threads')
 			.where('participantId', participantId)
