@@ -8,7 +8,7 @@ import { filesRegistry } from '@/api/files/filesRoutes';
 import { healthCheckRegistry } from '@/api/healthCheck/healthCheckRouter';
 import { messageRegistery } from '@/api/messages/messageApi';
 import { notificationsRegistry } from '@/api/notifications/notificationsRoutes';
-import { reactionsRegistry } from '@/api/reactions/reactionsRouter';
+import { reactionsRegistry } from '@/api/reactions/reactionApi';
 import { userRegistry } from '@/api/user/userApi';
 import { workspaceRegistry } from '@/api/workspace/workspaceApi';
 

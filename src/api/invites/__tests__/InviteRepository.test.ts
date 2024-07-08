@@ -7,13 +7,13 @@ describe('inviteRepository', () => {
 	afterEach(() => {
 		vi.clearAllMocks();
 	});
-
+	let inviteData;
 	test('createInvite', async () => {
-		const inviteData = {
+		inviteData = {
 			senderId: 1,
 			inviteeId: 2,
 			workspaceId: 4,
-			status: 'pending' as 'pending' | 'accepted' | 'cancelled',
+			status: 'pzending' as 'pending' | 'accepted' | 'cancelled',
 			expiresAt: new Date(),
 		};
 		await invitesRepository.createInvite(trx, inviteData);
