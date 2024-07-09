@@ -50,6 +50,14 @@ workspaceRegistry.registerPath({
 	request: { params: Schemas.GetWorkspaceSchema.shape.params },
 	responses: createApiResponse(Schemas.WorkspaceSchema, 'Success'),
 });
+workspaceRegistry.registerPath({
+	method: 'get',
+	path: '/workspaces/{id}/invites',
+	tags: ['Workspace'],
+	security: [{ [bearerAuth.name]: [] }],
+	request: { params: Schemas.GetWorkspaceSchema.shape.params },
+	responses: createApiResponse(Schemas.WorkspaceSchema, 'Success'),
+});
 
 workspaceRegistry.registerPath({
 	method: 'patch',

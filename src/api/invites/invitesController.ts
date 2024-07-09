@@ -1,11 +1,15 @@
-import db from 'db/db';
 import { Request, Response } from 'express';
+
+import {
+	asyncHandler,
+	handleServiceResponse,
+} from '@/common/utils/httpHandlers';
 
 import { CreateInvite } from './invitesModel';
 import invitesRepository from './invitesRepository';
 
 const InvitesController = {
-	createInvite: async (req: Request, res: Response) => {
+	createInvite: asyncHandler(async (req: Request, res: Response) => {
 		const { inviteeEmail, workspaceId } = req.body;
 
 		const createInvitePayload: CreateInvite = {
@@ -17,35 +21,50 @@ const InvitesController = {
 		};
 
 		const invite = await invitesRepository.createInvite(
-			db,
-			createInvitePayload
+			createInvitePayload,
+			res.trx
 		);
-		res.json(invite);
-	},
-	getInviteById: async (req: Request, res: Response) => {
+		handleServiceResponse(res, invite, 'ok');
+	}),
+	getInviteById: asyncHandler(async (req: Request, res: Response) => {
 		const id = req.params.id;
-		const invite = await invitesRepository.getInviteById(db, id);
-		res.json(invite);
-	},
+		const invite = await invitesRepository.getInviteById(id, res.trx);
+		handleServiceResponse(res, invite, 'ok');
+	}),
 
-	getWorkspaceInvites: async (req: Request, res: Response) => {
+	getWorkspaceInvites: asyncHandler(async (req: Request, res: Response) => {
 		const workspaceId = req.params.id;
 		const invites = await invitesRepository.getInviteByWorkspaceId(
-			db,
-			workspaceId
+			workspaceId,
+			res.trx
 		);
-		res.json(invites);
-	},
-	acceptInvite: async (req: Request, res: Response) => {
+		handleServiceResponse(res, invites, 'ok');
+	}),
+	updateInvite: asyncHandler(async (req: Request, res: Response) => {
 		const id = req.params.id;
-		await invitesRepository.acceptInvite(db, id);
-		res.sendStatus(200);
-	},
-	cancelInvite: async (req: Request, res: Response) => {
+		const { status } = req.body;
+		const updatedInvite = await invitesRepository.updateInvite(
+			id,
+			status,
+			res.trx
+		);
+		handleServiceResponse(res, updatedInvite, 'ok');
+	}),
+	acceptInvite: asyncHandler(async (req: Request, res: Response) => {
 		const id = req.params.id;
-		await invitesRepository.cancelInvite(db, id);
-		res.sendStatus(200);
-	},
+		await invitesRepository.acceptInvite(id, res.trx);
+		handleServiceResponse(res, 'Invite accepted', 'ok');
+	}),
+	cancelInvite: asyncHandler(async (req: Request, res: Response) => {
+		const id = req.params.id;
+		await invitesRepository.cancelInvite(id, res.trx);
+		handleServiceResponse(res, 'Invite cancelled', 'ok');
+	}),
+	deleteInvite: asyncHandler(async (req: Request, res: Response) => {
+		const id = req.params.id;
+		await invitesRepository.deleteInvite(id, res.trx);
+		handleServiceResponse(res, 'Invite deleted', 'ok');
+	}),
 };
 
 export default InvitesController;

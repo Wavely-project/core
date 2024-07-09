@@ -19,12 +19,12 @@ export async function seed(knex: Knex): Promise<void> {
 	 * */
 
 	await Promise.all([
-		EntityFactory.createInvite(1, 1, 2, 1, 'accepted'),
-		EntityFactory.createInvite(2, 1, 3, 1, 'accepted'),
-		EntityFactory.createInvite(3, 1, 4, 1, 'accepted'),
-		EntityFactory.createInvite(4, 2, 5, 3, 'cancelled'),
-		EntityFactory.createInvite(5, 6, 1, 3, 'pending'),
-		EntityFactory.createInvite(6, 3, 1, 4, 'pending'),
-		EntityFactory.createInvite(7, 5, 1, 5, 'cancelled'),
+		EntityFactory.createInvite(1, 1, 'email2@gmail.com', 1, 'accepted'),
+		EntityFactory.createInvite(2, 1, 'email3@gmail.com', 1, 'accepted'),
+		EntityFactory.createInvite(3, 1, 'email4@gmail.com', 1, 'accepted'),
+		EntityFactory.createInvite(4, 2, 'email5@gmail.com', 3, 'cancelled'),
+		EntityFactory.createInvite(5, 6, 'email1@gmail.com', 3, 'pending'),
+		EntityFactory.createInvite(6, 3, 'email1@gmail.com', 4, 'pending'),
+		EntityFactory.createInvite(7, 5, 'email1@gmail.com', 5, 'cancelled'),
 	]);
 }

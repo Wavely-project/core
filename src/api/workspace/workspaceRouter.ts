@@ -6,6 +6,7 @@ import { validateRequest } from '@/common/utils/httpHandlers';
 import AuthController from '../auth/authController';
 import ChannelController from '../channels/channelController';
 import CoworkersController from '../coworkers/coworkersController';
+import InvitesController from '../invites/invitesController';
 import WorkspaceController from './workspaceController';
 
 export const workspaceRouter: Router = (() => {
@@ -63,6 +64,14 @@ export const workspaceRouter: Router = (() => {
 			validateRequest(Schemas.GetWorkspaceSchema),
 		],
 		ChannelController.getWorkspaceChannels
+	);
+	router.get(
+		'/:id/invites',
+		[
+			AuthController.authenticate,
+			validateRequest(Schemas.GetWorkspaceSchema),
+		],
+		InvitesController.getWorkspaceInvites
 	);
 
 	// TODO:
