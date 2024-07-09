@@ -22,8 +22,8 @@ export type CreateInviteDto = Omit<Invite, 'id' | 'createdAt' | 'updatedAt'>;
 export const CreateInviteSchema = z.object({
 	body: z.object({
 		inviteeEmail: z.string().email(),
+		workspaceId: z.number(),
 	}),
-	params: z.object({ id: z.number() }),
 });
 export const GetInviteSchema = z.object({
 	params: z.object({ id: z.number() }),

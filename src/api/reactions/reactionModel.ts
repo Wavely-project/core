@@ -17,7 +17,7 @@ export const ReactionSchema = BaseReactionSchema.extend({
 export type Reaction = z.infer<typeof ReactionSchema>;
 export type CreateReaction = z.infer<typeof BaseReactionSchema>;
 export type CreateReactionDto = Omit<Reaction, 'id'>;
-
+export type deleteReactionDto = Omit<Reaction, 'id'>;
 export const CreateReactionSchema = z.object({
 	body: z.object({
 		userId: z.number(),
@@ -30,5 +30,9 @@ export const GetReactionSchema = z.object({
 });
 
 export const DeleteReactionSchema = z.object({
-	params: z.object({ id: z.number() }),
+	body: z.object({
+		userId: z.number(),
+		messageId: z.number(),
+		reaction: z.string(),
+	}),
 });

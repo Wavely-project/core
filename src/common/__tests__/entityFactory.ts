@@ -35,14 +35,14 @@ class EntityFactory {
 	async createInvite(
 		id: number,
 		senderId: number,
-		inviteeId: number,
+		inviteeEmail: string,
 		workspaceId: number,
 		status: 'pending' | 'accepted' | 'cancelled' = 'pending'
 	): Promise<Invite> {
 		const invite = {
 			id: id,
 			senderId: senderId,
-			inviteeId: inviteeId,
+			inviteeEmail: inviteeEmail,
 			workspaceId: workspaceId,
 			expiresAt: new Date(),
 			status: status,

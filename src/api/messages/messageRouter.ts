@@ -3,6 +3,7 @@ import express, { Router } from 'express';
 import { validateRequest } from '@/common/utils/httpHandlers';
 
 import AuthController from '../auth/authController';
+import ReactionController from '../reactions/reactionController';
 import MessageController from './messageController';
 import {
 	CreateMessageSchema,
@@ -24,6 +25,11 @@ export const messagesRouter: Router = (() => {
 		'/:id',
 		[AuthController.authenticate, validateRequest(GetMessageSchema)],
 		MessageController.getMessageById
+	);
+	router.get(
+		'/:id/reactions',
+		[AuthController.authenticate],
+		ReactionController.getReactionsByMessageId
 	);
 
 	router.patch(

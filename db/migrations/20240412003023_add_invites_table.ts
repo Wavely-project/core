@@ -21,7 +21,7 @@ export async function up(knex: Knex): Promise<void> {
 		table.increments('id').primary();
 		table.integer('workspaceId').unsigned();
 		table.integer('senderId').unsigned();
-		table.integer('inviteeId').unsigned();
+		table.string('inviteeEmail').notNullable();
 
 		table.timestamp('expiresAt').notNullable();
 		table
@@ -33,11 +33,7 @@ export async function up(knex: Knex): Promise<void> {
 			.references('id')
 			.inTable('workspaces')
 			.onDelete('CASCADE');
-		table
-			.foreign('inviteeId')
-			.references('id')
-			.inTable('users')
-			.onDelete('CASCADE');
+
 		table
 			.foreign('senderId')
 			.references('id')

@@ -3,6 +3,7 @@ import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 import { messageResponse } from '@/common/utils/commonResponses';
 
+import { ReactionSchema } from '../reactions/reactionModel';
 import {
 	CreateMessageSchema,
 	DeleteMessageSchema,
@@ -60,7 +61,7 @@ messageRegistery.registerPath({
 		body: {
 			content: {
 				'application/json': {
-					schema: UpdateMessageSchema.shape.body,
+					schema: UpdateMessageSchema.shape.params,
 				},
 			},
 		},
@@ -77,4 +78,13 @@ messageRegistery.registerPath({
 		params: DeleteMessageSchema.shape.params,
 	},
 	responses: createApiResponse(messageResponse, 'Success'),
+});
+
+messageRegistery.registerPath({
+	method: 'get',
+	path: '/messages/{id}/reactions',
+	tags: ['Message'],
+	security: [{ [bearerAuth.name]: [] }],
+	request: { params: GetMessageSchema.shape.params },
+	responses: createApiResponse(ReactionSchema, 'Success'),
 });
